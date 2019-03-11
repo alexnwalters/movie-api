@@ -8,7 +8,7 @@ function formatParams(params) {
     return queryItems.join('&');
 }
 
-function getMovies(movie1, movie2) {
+function runMoviesGets(movie1, movie2) {
     const params1 = {
         apikey: omdbKey,
         t: movie1
@@ -20,11 +20,16 @@ function getMovies(movie1, movie2) {
     };
 
     const searchMovie1String = formatParams(params1);
-    const SearchMovie1URL = omdbURL + searchMovie1String;
+    const searchMovie1URL = omdbURL + searchMovie1String;
     const searchMovie2String = formatParams(params2);
-    const SearchMovie2URL = omdbURL + searchMovie2String;
+    const searchMovie2URL = omdbURL + searchMovie2String;
 
-    fetch(SearchMovie1URL)
+    getMoviesForDisplay(searchMovie1URL, searchMovie2URL);
+    getMoviesRatings(searchMovie1URL, searchMovie2URL);
+}
+
+function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
+    fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -36,7 +41,7 @@ function getMovies(movie1, movie2) {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
 
-    fetch(SearchMovie2URL)
+    fetch(searchMovie2URL)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -47,6 +52,37 @@ function getMovies(movie1, movie2) {
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
+} 
+
+function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
+    const movie1Scores = [];
+    const movie2Scores = [];
+    
+    fetch(searchMovie1URL)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new error(response.statusText);
+        })
+        .then(responseJson => storeRatings(responseJson, movie1Scores))
+        .catch(err => {
+            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+        });
+
+    fetch(searchMovie2URL)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new error(response.statusText);
+        })
+        .then(responseJson => storeRatings(responseJson, movie2Scores))
+        .catch(err => {
+            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+        });
+
+    console.log(movie1Scores, movie2Scores);    
 } 
 
 function displayResults(responseJson) {
@@ -64,6 +100,16 @@ function displayResults(responseJson) {
     );
 }
 
+function storeRatings(responseJson, scores) {
+    console.log(responseJson);
+
+    for (let i = 0; i < responseJson.Ratings.length; i++) {
+        scores.push(parseFloat(responseJson.Ratings[i].Value));
+    };
+
+    return scores;
+}
+
 function watchForm() {
     $('form').submit(event => {
         event.preventDefault();
@@ -71,7 +117,7 @@ function watchForm() {
         const movie1 = $('#movie-one').val();
         const movie2 = $('#movie-two').val();
         console.log(movie1, movie2);
-        getMovies(movie1, movie2);
+        runMoviesGets(movie1, movie2);
     });
 }
 
