@@ -60,17 +60,25 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
 function displayResults(responseJson, movieDiv) {
     console.log(responseJson);
 
+    $('#js-error-message').empty();
+
     $(movieDiv).empty();
     
     $(movieDiv).append(
         `<h2 class='js-movie-title'>${responseJson.Title}</h2>
         <p>${responseJson.Year}</p>
         <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
-        <ul class='js-movie-rating'>
-        <li>${responseJson.Ratings[0].Source}: ${responseJson.Ratings[0].Value}</li>
-        <li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>
-        <li>${responseJson.Ratings[2].Source}: ${responseJson.Ratings[2].Value}</li>
-        </ul>`
+        <ul class='js-movie-rating'>`
+    );
+
+    for (let i = 0; i < responseJson.Ratings.length; i++) {
+        $(movieDiv).append(
+            `<li>${responseJson.Ratings[i].Source}: ${responseJson.Ratings[i].Value}</li>`
+        );
+    };
+
+    $(movieDiv).append(
+        '</ul>'
     );
 }
 
@@ -106,9 +114,9 @@ function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
 } 
 
 function storeRatings(responseJson, scores) {
-    for (let i = 0; i < responseJson.Ratings.length; i++) {
-        scores.push(parseFloat(responseJson.Ratings[i].Value));
-    };
+    scores = responseJson.Ratings;
+    
+    console.log(scores);
     return scores;
 }
 
