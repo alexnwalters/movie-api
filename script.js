@@ -29,6 +29,9 @@ function runMoviesGets(movie1, movie2) {
 }
 
 function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
+    const movieDivId1 = '#js-movie-one';
+    const movieDivId2 = '#js-movie-two';
+    
     fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
@@ -36,7 +39,7 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson))
+        .then(responseJson => displayResults(responseJson, movieDivId1))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
@@ -48,16 +51,33 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson))
+        .then(responseJson => displayResults(responseJson, movieDivId2))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
-} 
+}
 
-function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
+function displayResults(responseJson, movieDiv) {
+    console.log(responseJson);
+
+    $(movieDiv).empty();
+    
+    $(movieDiv).append(
+        `<h2 class='js-movie-title'>${responseJson.Title}</h2>
+        <p>${responseJson.Year}</p>
+        <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
+        <ul class='js-movie-rating'>
+        <li>${responseJson.Ratings[0].Source}: ${responseJson.Ratings[0].Value}</li>
+        <li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>
+        <li>${responseJson.Ratings[2].Source}: ${responseJson.Ratings[2].Value}</li>
+        </ul>`
+    );
+}
+
+function getMoviesRatings (searchMovie1URL, searchMovie2URL) { 
     const movie1Scores = [];
     const movie2Scores = [];
-    
+
     fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
@@ -82,31 +102,13 @@ function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
 
-    console.log(movie1Scores, movie2Scores);    
+    console.log(movie1Scores);
 } 
 
-function displayResults(responseJson) {
-    console.log(responseJson);
-    
-    $('#js-movie-one').append(
-        `<h2 class='js-movie-title'>${responseJson.Title}</h2>
-        <p>${responseJson.Year}</p>
-        <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
-        <ul class='js-movie-rating'>
-        <li>${responseJson.Ratings[0].Source}: ${responseJson.Ratings[0].Value}</li>
-        <li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>
-        <li>${responseJson.Ratings[2].Source}: ${responseJson.Ratings[2].Value}</li>
-        </ul>`
-    );
-}
-
 function storeRatings(responseJson, scores) {
-    console.log(responseJson);
-
     for (let i = 0; i < responseJson.Ratings.length; i++) {
         scores.push(parseFloat(responseJson.Ratings[i].Value));
     };
-
     return scores;
 }
 
