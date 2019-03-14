@@ -106,9 +106,9 @@ const movie1Scores = [];
 const movie2Scores = [];
 
 function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
-    
+
     fetch(searchMovie1URL)
-        .then(response => {
+        .then(response => {            
             if (response.ok) {
                 return response.json();
             }
@@ -120,19 +120,20 @@ function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
         });
 
     fetch(searchMovie2URL)
-        .then(response => {
+        .then(response => {            
             if (response.ok) {
                 return response.json();
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => storeRatings(responseJson, movie1Scores))
+        .then(responseJson => storeRatings(responseJson, movie2Scores))
+        .then
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
-        });
+        });        
 } 
 
-function storeRatings(responseJson, scores) {
+function storeRatings(responseJson, scores) {    
     scores = responseJson.Ratings;
     console.log(scores);
     return scores;
