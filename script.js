@@ -25,8 +25,10 @@ function runMoviesGets(movie1, movie2) {
     const searchMovie2URL = omdbURL + searchMovie2String;  
 
     getMoviesForDisplay(searchMovie1URL, searchMovie2URL);
-    getMoviesRatings(searchMovie1URL, searchMovie2URL);
 }
+
+const movieScores1 = [];
+const movieScores2 = [];
 
 function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
     const movieDivId1 = '#js-movie-one';
@@ -39,7 +41,7 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId1))
+        .then(responseJson => displayResults(responseJson, movieDivId1, movieScores1))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
@@ -51,13 +53,15 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId2))
+        .then(responseJson => displayResults(responseJson, movieDivId2, movieScores2))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
+
+    console.log(movieScores1, movieScores2);
 }
 
-function displayResults(responseJson, movieDiv) {
+function displayResults(responseJson, movieDiv, scores) {
     console.log(responseJson);
 
     $('#js-error-message').empty();
@@ -100,44 +104,20 @@ function displayResults(responseJson, movieDiv) {
     $(movieDiv).append(
         '</ul>'
     );
+        
+    storeRatings(responseJson, scores)
+    
+    console.log(scores);
 }
 
-const movie1Scores = [];
-const movie2Scores = [];
+function storeRatings(responseJson, scores) {
+    scores.length = 0;
 
-function getMoviesRatings (searchMovie1URL, searchMovie2URL) {
-
-    fetch(searchMovie1URL)
-        .then(response => {            
-            if (response.ok) {
-                return response.json();
-            }
-            throw new error(response.statusText);
-        })
-        .then(responseJson => storeRatings(responseJson, movie1Scores))
-        .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`);
-        });
-
-    fetch(searchMovie2URL)
-        .then(response => {            
-            if (response.ok) {
-                return response.json();
-            }
-            throw new error(response.statusText);
-        })
-        .then(responseJson => storeRatings(responseJson, movie2Scores))
-        .then
-        .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`);
-        });        
-} 
-
-function storeRatings(responseJson, scores) {    
-    scores = responseJson.Ratings;
-    console.log(scores);
+    for (let i = 0; i < responseJson.Ratings.length; i++) {	    
+        scores.push(responseJson.Ratings[i]);
+    };
     return scores;
-} 
+}
 
 function watchForm() {
     $('form').submit(event => {
