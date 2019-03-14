@@ -5,7 +5,7 @@ const omdbURL = 'https://www.omdbapi.com/?';
 
 const tmdbKey = '572565d80f61af6afed1df98562c0e06';
 const findURL = 'https://api.themoviedb.org/3/find/';
-const trailerURL = 'https://api.themoviedb.org/3/movie/'
+const trailerURL = 'https://api.themoviedb.org/3/movie/';
 
 function formatParams(params) {
     const queryItems = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
@@ -113,7 +113,7 @@ function displayResults(responseJson, movieDiv, scores) {
     
     console.log(scores);
 
-    runTmdbFindGet(responseJson);
+    runTmdbFindGet(responseJson, movieDiv);
 }
 
 function storeRatings(responseJson, scores) {
@@ -125,7 +125,7 @@ function storeRatings(responseJson, scores) {
     return scores;
 }
 
-function runTmdbFindGet(omdbResponse) {
+function runTmdbFindGet(omdbResponse, movieDiv) {
     const tmdbParamFind = {
         api_key: tmdbKey,
         language: 'en-US',
@@ -134,10 +134,10 @@ function runTmdbFindGet(omdbResponse) {
 
     const tmdbFindURL = findURL + omdbResponse.imdbID + '?' + formatParams(tmdbParamFind);
 
-    getUseImdbIdtoFindTmdbId(tmdbFindURL);
+    getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv);
 }
 
-function getUseImdbIdtoFindTmdbId(tmdbFindURL) {
+function getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv) {
     fetch(tmdbFindURL)
         .then(response => {
             if (response.ok) {
@@ -145,13 +145,13 @@ function getUseImdbIdtoFindTmdbId(tmdbFindURL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => runTmdbTrailerGet(responseJson))
+        .then(responseJson => runTmdbTrailerGet(responseJson, movieDiv))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
 
-function runTmdbTrailerGet(responseJson) {
+function runTmdbTrailerGet(responseJson, movieDiv) {
     const tmdbParamTrailer = {
         api_key: tmdbKey,
         language: 'en-US',
@@ -159,7 +159,32 @@ function runTmdbTrailerGet(responseJson) {
 
     const tmdbTrailerURL = trailerURL + responseJson.movie_results[0].id + '/videos?' + formatParams(tmdbParamTrailer);
 
-    console.log(tmdbTrailerURL);
+    getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv);
+}
+
+function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
+    fetch(tmdbTrailerURL)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new error(response.statusText);
+        })
+        .then(responseJson => displayYoutubeById(responseJson, movieDiv))
+        .catch(err => {
+            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+    });
+}
+
+function displayYoutubeById(responseJson, movieDiv) {
+
+    console.log(`${responseJson.results[0].key}`);
+    
+    $(movieDiv).append(
+        `<iframe width="560" height="315" 
+        src="https://www.youtube.com/embed/${responseJson.results[0].key}"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>`
+    );
 }
 
 function watchForm() {
