@@ -37,6 +37,7 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
 
     const movieScores1 = [];
     const movieScores2 = [];
+
     fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
@@ -66,17 +67,8 @@ function displayResults(responseJson, movieDiv, scores) {
     console.log(responseJson);
     $('#js-error-message').empty();
     handleMovieDetails(responseJson, movieDiv);
-    handleMoviesRatings(responseJson, movieDiv);  
-    storeRatings(responseJson, scores);
+    handleMoviesRatings(responseJson, movieDiv);
     runTmdbFindGet(responseJson, movieDiv);
-}
-function storeRatings(responseJson, scores) {
-    scores.length = 0;
-    for (let i = 0; i < responseJson.Ratings.length; i++) {	    
-        scores.push(responseJson.Ratings[i]);
-    };
-    console.log(scores);
-    return scores;
 }
 
 function handleMovieDetails(responseJson, movieDiv) {
