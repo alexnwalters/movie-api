@@ -35,9 +35,6 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
     const movieDivId1 = '#js-movie-one';
     const movieDivId2 = '#js-movie-two';
 
-    const movieScores1 = [];
-    const movieScores2 = [];
-
     fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
@@ -45,7 +42,7 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId1, movieScores1))
+        .then(responseJson => displayResults(responseJson, movieDivId1))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
@@ -56,14 +53,13 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId2, movieScores2))
+        .then(responseJson => displayResults(responseJson, movieDivId2))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
-    console.log(movieScores1, movieScores2);
 }
 
-function displayResults(responseJson, movieDiv, scores) {
+function displayResults(responseJson, movieDiv) {
     console.log(responseJson);
     $('#js-error-message').empty();
     handleMovieDetails(responseJson, movieDiv);
@@ -78,7 +74,7 @@ function handleMovieDetails(responseJson, movieDiv) {
         `<h2 class='js-movie-title'>${responseJson.Title}</h2>
         <p>${responseJson.Year}</p>
         <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
-        <ul class='js-movie-rating'>`
+        <ul class='js-movie-rating'></ul>`
     );
 }
 
@@ -110,6 +106,43 @@ function handleMoviesRatings(responseJson, movieDiv) {
     }
 }
 
+function handleMoviesRatings(responseJson, movieDiv) {
+    for(let i = 0; i < responseJson.Ratings.length; i++) {
+    
+        if (responseJson.Ratings[i].Source == "Internet Movie Database") {
+            $(movieDiv + ' .js-movie-rating').append(
+                `<li class="${movieDiv}-imdb-score">${responseJson.Ratings[i].Value}</li>`
+            );
+        }
+        else if (responseJson.Ratings[i].Source == "Rotten Tomatoes") {
+            if (responseJson.Ratings.length == 2) {
+                $(movieDiv + ' .js-movie-rating').append(
+                    `<li class="rt-score">${responseJson.Ratings[i].Value}</li>
+                    <li class="meta-score">No Score</li>`
+                );
+            }
+            else {
+                $(movieDiv + ' .js-movie-rating').append(
+                    `<li class="rt-score">${responseJson.Ratings[i].Value}</li>`
+                );
+            }
+        }
+        else {
+            if (responseJson.Ratings.length == 2) {
+                $(movieDiv + ' .js-movie-rating').append(
+                    `<li class="rt-score">No Score</li>
+                    <li class="meta-score">${responseJson.Ratings[i].Value}</li>`
+                );
+            }
+            else {
+                $(movieDiv + ' .js-movie-rating').append(
+                    `<li class="meta-score">${responseJson.Ratings[i].Value}</li>`
+                );
+            }
+        }
+    }
+}
+
 function runTmdbFindGet(omdbResponse, movieDiv) {
     const tmdbParamFind = {
         api_key: tmdbKey,
@@ -132,7 +165,7 @@ function getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv) {
         })
         .then(responseJson => runTmdbTrailerGet(responseJson, movieDiv))
         .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+            $('#js-error-message').text(`Something went wrong: ${err.message}`)
     });
 }
 
@@ -175,6 +208,11 @@ function displayYoutubeById(responseJson, movieDiv) {
     }
 }
 
+function storeMovieRatings() {
+    var movieScores1 = document.getElementById('#js-movie-one-imdb-score').innerHTML;
+    console.log(movieScores1);    
+}
+
 function watchForm() {
     $('form').submit(event => {
         event.preventDefault();
@@ -183,6 +221,7 @@ function watchForm() {
         const movie2 = $('#movie-two').val();
         console.log(movie1, movie2);
         runMoviesGets(movie1, movie2);
+        storeMovieRatings();
     });
 }
 
