@@ -31,13 +31,12 @@ function runMoviesGets(movie1, movie2) {
     getMoviesForDisplay(searchMovie1URL, searchMovie2URL);
 }
 
-const movieScores1 = [];
-const movieScores2 = [];
-
 function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
     const movieDivId1 = '#js-movie-one';
     const movieDivId2 = '#js-movie-two';
-    
+
+    const movieScores1 = [];
+    const movieScores2 = [];
     fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
@@ -49,7 +48,6 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
-
     fetch(searchMovie2URL)
         .then(response => {
             if (response.ok) {
@@ -61,15 +59,27 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
-
     console.log(movieScores1, movieScores2);
 }
 
 function displayResults(responseJson, movieDiv, scores) {
     console.log(responseJson);
-
     $('#js-error-message').empty();
+    handleMovieDetails(responseJson, movieDiv);
+    handleMoviesRatings(responseJson, movieDiv);  
+    storeRatings(responseJson, scores);
+    runTmdbFindGet(responseJson, movieDiv);
+}
+function storeRatings(responseJson, scores) {
+    scores.length = 0;
+    for (let i = 0; i < responseJson.Ratings.length; i++) {	    
+        scores.push(responseJson.Ratings[i]);
+    };
+    console.log(scores);
+    return scores;
+}
 
+function handleMovieDetails(responseJson, movieDiv) {
     $(movieDiv).empty();
     
     $(movieDiv).append(
@@ -78,20 +88,22 @@ function displayResults(responseJson, movieDiv, scores) {
         <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
         <ul class='js-movie-rating'>`
     );
+}
 
+function handleMoviesRatings(responseJson, movieDiv) {
     if (responseJson.Ratings.length == 2) {
-        $(movieDiv).append(
+        $(movieDiv + ' .js-movie-rating').append(
             `<li>${responseJson.Ratings[0].Source}: ${responseJson.Ratings[0].Value}</li>`
         );
 
         if (responseJson.Ratings[1].Source == "Rotten Tomatoes") {
-            $(movieDiv).append(
+            $(movieDiv + ' .js-movie-rating').append(
                 `<li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>
                 <li>Metacritic: No Score</li>`
             );
         }
         else {
-            $(movieDiv).append(
+            $(movieDiv + ' .js-movie-rating').append(
                 `<li>Rotten Tomatoes: No Score</li>
                 <li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>`
             );
@@ -99,30 +111,11 @@ function displayResults(responseJson, movieDiv, scores) {
     }
     else {
         for (let i = 0; i < responseJson.Ratings.length; i++) {
-            $(movieDiv).append(
+            $(movieDiv + ' .js-movie-rating').append(
                 `<li>${responseJson.Ratings[i].Source}: ${responseJson.Ratings[i].Value}</li>`
             );
         }
     }
-
-    $(movieDiv).append(
-        '</ul>'
-    );
-        
-    storeRatings(responseJson, scores)
-    
-    console.log(scores);
-
-    runTmdbFindGet(responseJson, movieDiv);
-}
-
-function storeRatings(responseJson, scores) {
-    scores.length = 0;
-
-    for (let i = 0; i < responseJson.Ratings.length; i++) {	    
-        scores.push(responseJson.Ratings[i]);
-    };
-    return scores;
 }
 
 function runTmdbFindGet(omdbResponse, movieDiv) {
@@ -176,15 +169,18 @@ function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
     });
 }
 
-function displayYoutubeById(responseJson, movieDiv) {
+function displayYoutubeById(responseJson, movieDiv) {            
+    for(let i = 0; i < responseJson.results.length; i++) {
+        if (responseJson.results[i].type == "Trailer") {
+            $(movieDiv).append(
+                `<iframe width="560" height="315" 
+                src="https://www.youtube.com/embed/${responseJson.results[i].key}"
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>`
+            );
 
-    console.log(`${responseJson.results[0].key}`);
-    
-    $(movieDiv).append(
-        `<iframe width="560" height="315" 
-        src="https://www.youtube.com/embed/${responseJson.results[0].key}"
-        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>`
-    );
+           break;
+        }
+    }
 }
 
 function watchForm() {
