@@ -7,6 +7,11 @@ const tmdbKey = '572565d80f61af6afed1df98562c0e06';
 const findURL = 'https://api.themoviedb.org/3/find/';
 const trailerURL = 'https://api.themoviedb.org/3/movie/';
 
+const movieScores1 = [];
+const movieScores2 = [];
+const title1 = [];
+const title2 = [];
+
 function formatParams(params) {
     const queryItems = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
     return queryItems.join('&');
@@ -29,6 +34,7 @@ function runMoviesGets(movie1, movie2) {
     const searchMovie2URL = omdbURL + searchMovie2String;  
 
     getMoviesForDisplay(searchMovie1URL, searchMovie2URL);
+    createScoreButton(); 
 }
 
 function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
@@ -42,7 +48,7 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId1))
+        .then(responseJson => displayResults(responseJson, movieDivId1, movieScores1, title1))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
@@ -53,18 +59,55 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId2))
+        .then(responseJson => displayResults(responseJson, movieDivId2, movieScores2, title2))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
-        });
+        });   
 }
 
-function displayResults(responseJson, movieDiv) {
+function displayResults(responseJson, movieDiv, scores, title) {
     console.log(responseJson);
     $('#js-error-message').empty();
     handleMovieDetails(responseJson, movieDiv);
-    handleMoviesRatings(responseJson, movieDiv);
+    handleMoviesRatings(responseJson, movieDiv);  
+    storeRatings(responseJson, scores);
     runTmdbFindGet(responseJson, movieDiv);
+    storeTitles(responseJson, title);
+}
+
+function storeTitles(responseJson, title) {
+    title.length = 0;
+    title.push(responseJson.Title);
+    return title;
+}
+
+function storeRatings(responseJson, scores) {
+    scores.length = 0;
+    for(let i = 0; i < responseJson.Ratings.length; i++) {
+        if (responseJson.Ratings[i].Source == 'Internet Movie Database') {
+            scores.push(parseFloat(responseJson.Ratings[i].Value));
+        }
+        else if (responseJson.Ratings[i].Source == 'Rotten Tomatoes') {
+            if (responseJson.Ratings.length == 2) {
+                scores.push(parseFloat(responseJson.Ratings[i].Value));
+                scores.push(0);
+            }
+            else {
+                scores.push(parseFloat(responseJson.Ratings[i].Value));
+            }
+        }
+        else {
+            if (responseJson.Ratings.length == 2) {
+                scores.push(0);
+                scores.push(parseFloat(responseJson.Ratings[i].Value));
+            }
+            else {
+                scores.push(parseFloat(responseJson.Ratings[i].Value));
+            }
+        }
+    }
+    console.log(scores);
+    return scores;
 }
 
 function handleMovieDetails(responseJson, movieDiv) {
@@ -74,7 +117,7 @@ function handleMovieDetails(responseJson, movieDiv) {
         `<h2 class='js-movie-title'>${responseJson.Title}</h2>
         <p>${responseJson.Year}</p>
         <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
-        <ul class='js-movie-rating'></ul>`
+        <ul class='js-movie-rating hidden'>`
     );
 }
 
@@ -106,43 +149,6 @@ function handleMoviesRatings(responseJson, movieDiv) {
     }
 }
 
-function handleMoviesRatings(responseJson, movieDiv) {
-    for(let i = 0; i < responseJson.Ratings.length; i++) {
-    
-        if (responseJson.Ratings[i].Source == "Internet Movie Database") {
-            $(movieDiv + ' .js-movie-rating').append(
-                `<li class="${movieDiv}-imdb-score">${responseJson.Ratings[i].Value}</li>`
-            );
-        }
-        else if (responseJson.Ratings[i].Source == "Rotten Tomatoes") {
-            if (responseJson.Ratings.length == 2) {
-                $(movieDiv + ' .js-movie-rating').append(
-                    `<li class="rt-score">${responseJson.Ratings[i].Value}</li>
-                    <li class="meta-score">No Score</li>`
-                );
-            }
-            else {
-                $(movieDiv + ' .js-movie-rating').append(
-                    `<li class="rt-score">${responseJson.Ratings[i].Value}</li>`
-                );
-            }
-        }
-        else {
-            if (responseJson.Ratings.length == 2) {
-                $(movieDiv + ' .js-movie-rating').append(
-                    `<li class="rt-score">No Score</li>
-                    <li class="meta-score">${responseJson.Ratings[i].Value}</li>`
-                );
-            }
-            else {
-                $(movieDiv + ' .js-movie-rating').append(
-                    `<li class="meta-score">${responseJson.Ratings[i].Value}</li>`
-                );
-            }
-        }
-    }
-}
-
 function runTmdbFindGet(omdbResponse, movieDiv) {
     const tmdbParamFind = {
         api_key: tmdbKey,
@@ -165,7 +171,7 @@ function getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv) {
         })
         .then(responseJson => runTmdbTrailerGet(responseJson, movieDiv))
         .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`)
+            $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
 
@@ -208,9 +214,44 @@ function displayYoutubeById(responseJson, movieDiv) {
     }
 }
 
-function storeMovieRatings() {
-    var movieScores1 = document.getElementById('#js-movie-one-imdb-score').innerHTML;
-    console.log(movieScores1);    
+function createScoreButton() {
+    $('section').append('<button class="score-button" type="button">show score</button>');
+}
+
+function hideScoresList() {
+    $('section').find('.js-movie-rating').toggleClass('hidden');
+}
+
+function hideScoreButton() {
+    $('section').find('.score-button').toggleClass('hidden');
+}
+
+function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
+    let winsMovie1 = 0;
+    let winsMovie2 = 0;
+
+    for (let i = 0; i < movieScores1.length; i++) {
+        if (movieScores1[i] > movieScores2[i]) {
+            winsMovie1++;
+        }
+        else if (movieScores1[i] < movieScores2[i]) {
+            winsMovie2++;
+        }
+        else {
+            return;
+        }
+    }
+
+    if (winsMovie1 > winsMovie2) {
+        $('section').append(`<h3>The Winner Is ${title1}!</h3>`);
+    }
+    else if (winsMovie1 < winsMovie2) {
+        $('section').append(`<h3>The Winner Is ${title2}!</h3>`);
+    }
+    else {
+        $('section').append(`<h3>It's A Draw!</h3>`)
+    }
+
 }
 
 function watchForm() {
@@ -221,7 +262,12 @@ function watchForm() {
         const movie2 = $('#movie-two').val();
         console.log(movie1, movie2);
         runMoviesGets(movie1, movie2);
-        storeMovieRatings();
+    });
+
+    $('section').on('click', '.score-button', function(event) {
+        hideScoresList();
+        hideScoreButton();
+        compareMovieRatings(movieScores1, movieScores2, title1, title2);
     });
 }
 
