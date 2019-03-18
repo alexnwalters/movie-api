@@ -34,12 +34,13 @@ function runMoviesGets(movie1, movie2) {
     const searchMovie2URL = omdbURL + searchMovie2String;  
 
     getMoviesForDisplay(searchMovie1URL, searchMovie2URL);
-    createScoreButton(); 
 }
 
 function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
     const movieDivId1 = '#js-movie-one';
     const movieDivId2 = '#js-movie-two';
+    const scoreDivId1 = '#js-score-one';
+    const scoreDivId2 = '#js-score-two';
 
     fetch(searchMovie1URL)
         .then(response => {
@@ -48,7 +49,8 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId1, movieScores1, title1))
+        .then(responseJson => testForFoundMovie(responseJson))
+        .then(responseJson => displayResults(responseJson, movieDivId1, scoreDivId1, movieScores1, title1))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });
@@ -59,17 +61,30 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => displayResults(responseJson, movieDivId2, movieScores2, title2))
+        .then(responseJson => testForFoundMovie(responseJson))
+        .then(responseJson => displayResults(responseJson, movieDivId2, scoreDivId2, movieScores2, title2))
         .catch(err => {
             $('#js-error-message').text(`Something went wrong: ${err.message}`);
         });   
 }
 
-function displayResults(responseJson, movieDiv, scores, title) {
-    console.log(responseJson);
-    $('#js-error-message').empty();
+function testForFoundMovie(responseJson) {
+    console.log(responseJson); 
+    if (responseJson.Response == 'False') {
+        $('form').append(`<p class='not-found'>${responseJson.Error} <br> Check Spelling or if missing 'A' or 'The'</p>`);
+        $('section').addClass('hidden');
+        $('form').removeClass('hidden');
+    }
+    else {
+        showScoreButton();
+        return responseJson;
+    }    
+}
+
+function displayResults(responseJson, movieDiv, scoreDiv, scores, title) {
+    $('#js-error-message').empty(); 
     handleMovieDetails(responseJson, movieDiv);
-    handleMoviesRatings(responseJson, movieDiv);  
+    handleMoviesRatings(responseJson, scoreDiv);  
     storeRatings(responseJson, scores);
     runTmdbFindGet(responseJson, movieDiv);
     storeTitles(responseJson, title);
@@ -106,7 +121,6 @@ function storeRatings(responseJson, scores) {
             }
         }
     }
-    console.log(scores);
     return scores;
 }
 
@@ -114,36 +128,40 @@ function handleMovieDetails(responseJson, movieDiv) {
     $(movieDiv).empty();
     
     $(movieDiv).append(
-        `<h2 class='js-movie-title'>${responseJson.Title}</h2>
-        <p>${responseJson.Year}</p>
-        <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
-        <ul class='js-movie-rating hidden'>`
+        `<div class='movie-details'>
+        <h2 class='js-movie-title'>${responseJson.Title}</h2>
+        <p class='js-movie-info'>${responseJson.Year} | Rated ${responseJson.Rated}</p>
+        <p class='js-movie-plot'>${responseJson.Plot}</p>
+        </div>
+        <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>`
     );
 }
 
-function handleMoviesRatings(responseJson, movieDiv) {
+function handleMoviesRatings(responseJson, scoreDiv) {
+    $(scoreDiv).append(`<ul class='js-movie-rating hidden'>${responseJson.Title}:</ul>`);
+
     if (responseJson.Ratings.length == 2) {
-        $(movieDiv + ' .js-movie-rating').append(
-            `<li>${responseJson.Ratings[0].Source}: ${responseJson.Ratings[0].Value}</li>`
+        $(scoreDiv + ' .js-movie-rating').append(
+            `<li>${responseJson.Ratings[0].Value}</li>`
         );
 
         if (responseJson.Ratings[1].Source == "Rotten Tomatoes") {
-            $(movieDiv + ' .js-movie-rating').append(
-                `<li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>
-                <li>Metacritic: No Score</li>`
+            $(scoreDiv + ' .js-movie-rating').append(
+                `<li>${responseJson.Ratings[1].Value}</li>
+                <li>No Score</li>`
             );
         }
         else {
-            $(movieDiv + ' .js-movie-rating').append(
-                `<li>Rotten Tomatoes: No Score</li>
-                <li>${responseJson.Ratings[1].Source}: ${responseJson.Ratings[1].Value}</li>`
+            $(scoreDiv + ' .js-movie-rating').append(
+                `<li>No Score</li>
+                <li>${responseJson.Ratings[1].Value}</li>`
             );
         }
     }
     else {
         for (let i = 0; i < responseJson.Ratings.length; i++) {
-            $(movieDiv + ' .js-movie-rating').append(
-                `<li>${responseJson.Ratings[i].Source}: ${responseJson.Ratings[i].Value}</li>`
+            $(scoreDiv + ' .js-movie-rating').append(
+                `<li>${responseJson.Ratings[i].Value}</li>`
             );
         }
     }
@@ -200,30 +218,40 @@ function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
     });
 }
 
-function displayYoutubeById(responseJson, movieDiv) {            
+function displayYoutubeById(responseJson, movieDiv) {
+    console.log(responseJson);            
     for(let i = 0; i < responseJson.results.length; i++) {
         if (responseJson.results[i].type == "Trailer") {
             $(movieDiv).append(
-                `<iframe width="560" height="315" 
+                `<iframe class="js-movie-trailer" 
                 src="https://www.youtube.com/embed/${responseJson.results[i].key}"
                 frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>`
             );
 
            break;
         }
+        else {
+            $(movieDiv).append(`<p class="js-movie-trailer">No Trailer Available</p>`);
+        }
     }
 }
 
-function createScoreButton() {
-    $('section').append('<button class="score-button" type="button">show score</button>');
+function showScoresList() {
+    $('#scores').find('.js-movie-rating').toggleClass('hidden');
+    $('.raters-list').toggleClass('hidden');
 }
 
-function hideScoresList() {
-    $('section').find('.js-movie-rating').toggleClass('hidden');
+function showScoreButton() {
+    $('.score-button').removeClass('hidden');
 }
 
 function hideScoreButton() {
-    $('section').find('.score-button').toggleClass('hidden');
+    $('.score-button').addClass('hidden');
+}
+
+function showNavbar() {
+    $('nav').removeClass('hidden');
+    handleNavRestart();
 }
 
 function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
@@ -243,32 +271,66 @@ function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
     }
 
     if (winsMovie1 > winsMovie2) {
-        $('section').append(`<h3>The Winner Is ${title1}!</h3>`);
+        $('#scorecard').append(`<h3>TKO! ${title1} Wins!</h3>`);
     }
     else if (winsMovie1 < winsMovie2) {
-        $('section').append(`<h3>The Winner Is ${title2}!</h3>`);
+        $('#scorecard').append(`<h3>The New Champion Is ${title2}!</h3>`);
     }
     else {
-        $('section').append(`<h3>It's A Draw!</h3>`)
+        $('#scorecard').append(`<h3>It's A Draw!</h3>`)
     }
+}
 
+function readyDisplay() {
+    $('section').removeClass('hidden');
+    $('.not-found').remove();
+    $('form').addClass('hidden');
+}
+
+function handleScoreButton(){
+    $('.score-button').on('click', function(event) {
+        showScoresList();
+        hideScoreButton();
+        compareMovieRatings(movieScores1, movieScores2, title1, title2);
+        handleRestartButton();
+        window.scrollBy(0, 2000);
+    });    
+}
+
+function handleRestartButton() {
+    $('#scorecard').append('<button class="restart-button" type="button">Here Comes A New Challenger!</button>')
+    $('.restart-button').on('click', function(event) {
+        location.reload();
+    });
+}
+
+function handleNavRestart() {
+    $('#nav-restart').on('click', function(event) {
+        location.reload();
+    });
+}
+
+function handleScrollPastNav() {
+    $('a').on('click', function(event) {
+        event.preventDefault(); 
+        let target = $($(this).attr('href'));
+        let scroll = $(target).offset().top - 80;
+        $('body, html').animate({ 'scrollTop': scroll }, 0);
+    });
 }
 
 function watchForm() {
     $('form').submit(event => {
         event.preventDefault();
-        console.log('Ran watchForm');
+        readyDisplay();
         const movie1 = $('#movie-one').val();
         const movie2 = $('#movie-two').val();
         console.log(movie1, movie2);
         runMoviesGets(movie1, movie2);
+        showNavbar();
     });
-
-    $('section').on('click', '.score-button', function(event) {
-        hideScoresList();
-        hideScoreButton();
-        compareMovieRatings(movieScores1, movieScores2, title1, title2);
-    });
+    handleScoreButton();
+    handleScrollPastNav();
 }
 
 $(watchForm);

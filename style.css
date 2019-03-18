@@ -1,3 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .hidden {
     display: none;
 }
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    text-align: center;
+}
+
+header {
+    position: fixed;
+    background-color: white;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    padding: 10px 0;
+}
+
+main {
+    margin-top: 80px;
+}
+
+#scorecard {    
+    padding: 40px 0;
+}
+
+legend, input {
+    margin-bottom: 8px;
+}
+
+.movie-display {
+    display: inline-block;
+    width: 94vw;
+    margin: 0 auto;
+}
+
+#js-movie-one, #js-movie-two {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.movie-details {
+    width: 50vw;
+    margin-bottom: 8px;
+}
+
+.movie-details p {
+    margin-top: 6px;
+}
+
+.js-movie-plot {
+    text-align: left;
+}
+
+.js-movie-poster {
+    height: 30vh;
+}
+
+#scores {
+    display: flex;
+    justify-content: space-around;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+
+
