@@ -311,11 +311,11 @@ function handleNavRestart() {
 }
 
 function handleScrollPastNav() {
-    $('a').on('click', function(event) {
+    $('a.nav-scroll').on('click', function(event) {
         event.preventDefault(); 
         let target = $($(this).attr('href'));
         let scroll = $(target).offset().top - 80;
-        $('body, html').animate({ 'scrollTop': scroll }, 0);
+        $('body, html').animate({ 'scrollTop': scroll }, 50);
     });
 }
 

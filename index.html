@@ -14,9 +14,9 @@
         
         <nav role="navigation" id="navbar" class="hidden">
             <div class="nav-list">
-                <a href="#js-movie-one">Champion</a>
-                <a href="#js-movie-two">Contender</a>
-                <a href="#scorecard">Scorecard</a>
+                <a href="#js-movie-one" class="nav-scroll">Champion</a>
+                <a href="#js-movie-two" class="nav-scroll">Contender</a>
+                <a href="#scorecard" class="nav-scroll">Scorecard</a>
                 <a id="nav-restart">Restart</a>
             </div>
         </nav>
@@ -27,11 +27,11 @@
             <div id="form-container">
                 <legend>Choose Your Combatants</legend>
                 <label>Champion:
-                    <input type="text" id="movie-one" value="Pulp Fiction">
+                    <input type="text" id="movie-one" placeholder="Pulp Fiction" required>
                 </label>
                 <br>
                 <label>Contender:
-                    <input type="text" id="movie-two" value="Bad Boys">
+                    <input type="text" id="movie-two" placeholder="Bad Boys" required>
                 </label>            
                 <br>
                 <input type="submit" value="Start the Fight!">

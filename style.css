@@ -16,6 +16,10 @@ body {
     text-align: center;
 }
 
+form {
+    margin: 0 auto;
+}
+
 header {
     position: fixed;
     background-color: white;
@@ -53,7 +57,6 @@ legend, input {
 
 .movie-details {
     width: 50vw;
-    margin-bottom: 8px;
 }
 
 .movie-details p {
@@ -66,6 +69,10 @@ legend, input {
 
 .js-movie-poster {
     height: 30vh;
+}
+
+.js-movie-trailer {
+    margin: 8px;
 }
 
 #scores {
