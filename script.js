@@ -5,8 +5,11 @@ const omdbURL = 'https://www.omdbapi.com/?';
 
 const tmdbKey = '572565d80f61af6afed1df98562c0e06';
 const findURL = 'https://api.themoviedb.org/3/find/';
-const trailerURL = 'https://api.themoviedb.org/3/movie/';
+const searchURL = 'https://api.themoviedb.org/3/search/movie';
+const movieURL = 'https://api.themoviedb.org/3/movie/';
 
+const imdbId1 = [];
+const imdbId2 = [];
 const movieScores1 = [];
 const movieScores2 = [];
 const title1 = [];
@@ -17,31 +20,31 @@ function formatParams(params) {
     return queryItems.join('&');
 }
 
-function runMoviesGets(movie1, movie2) {
-    const omdbParams1 = {
-        apikey: omdbKey,
-        t: movie1
-    };
+function runtmdbMovieSearchGets(movie1, movie2) {
+    const tmdbSearchParam1 = {
+        api_key: tmdbKey,
+        language: 'en-US',
+        query: movie1
+    }
+    
+    const tmdbSearchParam2 = {
+        api_key: tmdbKey,
+        language: 'en-US',
+        query: movie2
+    }
+    
+    const searchTMDBMovie1String = formatParams(tmdbSearchParam1);
+    const searchTMDBMovie2String = formatParams(tmdbSearchParam2);
+    const searchMovie1URL = searchURL + '?' + searchTMDBMovie1String;
+    const searchMovie2URL = searchURL + '?' + searchTMDBMovie2String; 
 
-    const omdbParams2 = {
-        apikey: omdbKey,
-        t: movie2
-    };
-
-    const searchMovie1String = formatParams(omdbParams1);
-    const searchMovie1URL = omdbURL + searchMovie1String;
-    const searchMovie2String = formatParams(omdbParams2);
-    const searchMovie2URL = omdbURL + searchMovie2String;  
-
-    getMoviesForDisplay(searchMovie1URL, searchMovie2URL);
+    getSearchTmdbMovies(searchMovie1URL, searchMovie2URL);
 }
 
-function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
-    const movieDivId1 = '#js-movie-one';
-    const movieDivId2 = '#js-movie-two';
-    const scoreDivId1 = '#js-score-one';
-    const scoreDivId2 = '#js-score-two';
-
+function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
+    const movie1Results = '#js-search-one';
+    const movie2Results = '#js-search-two'; 
+   
     fetch(searchMovie1URL)
         .then(response => {
             if (response.ok) {
@@ -49,10 +52,9 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => testForFoundMovie(responseJson))
-        .then(responseJson => displayResults(responseJson, movieDivId1, scoreDivId1, movieScores1, title1))
+        .then(responseJson => displayFoundMovieOptions(responseJson, movie1Results))
         .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+            $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
         });
     fetch(searchMovie2URL)
         .then(response => {
@@ -61,17 +63,112 @@ function getMoviesForDisplay(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
-        .then(responseJson => testForFoundMovie(responseJson))
-        .then(responseJson => displayResults(responseJson, movieDivId2, scoreDivId2, movieScores2, title2))
+        .then(responseJson => displayFoundMovieOptions(responseJson, movie2Results))
         .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`);
-        });   
+            $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
+        });
+        
+    handleReadyButton();
+    handleSearchRestart();
+}
+
+function displayFoundMovieOptions(responseJson, movieResultsList) {
+    //$('#js-error-message').empty();
+
+    for (let i = 0; i < responseJson.results.length && i < 10; i++) {
+        $(movieResultsList).append(
+            `<option value='${responseJson.results[i].id}'>
+            ${responseJson.results[i].title}  (${responseJson.results[i].release_date})
+            </option>`
+        );
+    }
+}
+
+function runTmdbMovieDetailsGets() {
+    const idMovie1 = 'js-search-one';
+    const idMovie2 = 'js-search-two';  
+    
+    const tmdbDetailsParam = {
+        api_key: tmdbKey,
+        language: 'en-US',
+    }
+        
+    const TMDBMovieDetailsString = formatParams(tmdbDetailsParam);
+    const details1MovieURL = movieURL + document.getElementById(idMovie1).value + '?' + TMDBMovieDetailsString;
+    const details2MovieURL = movieURL + document.getElementById(idMovie2).value + '?' + TMDBMovieDetailsString;
+
+    getDetailsTmdbMovies(details1MovieURL, details2MovieURL);
+}
+
+function getDetailsTmdbMovies(details1MovieURL, details2MovieURL) {
+    const movieDivId1 = '#js-movie-one';
+    const movieDivId2 = '#js-movie-two';
+    const scoreDivId1 = '#js-score-one';
+    const scoreDivId2 = '#js-score-two';
+       
+    fetch(details1MovieURL)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new error(response.statusText);
+        })
+        .then(responseJson => useTmdbIdtoGetImdbId(responseJson, movieDivId1, scoreDivId1, movieScores1, title1))
+        .catch(err => {
+            $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
+        });
+
+    fetch(details2MovieURL)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new error(response.statusText);
+        })
+        .then(responseJson => useTmdbIdtoGetImdbId(responseJson, movieDivId2, scoreDivId2, movieScores2, title2))
+        .catch(err => {
+            $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
+        });
+}
+
+function useTmdbIdtoGetImdbId(responseJson, movieDiv, scoreDiv, scores, title) {
+    let imdbId = responseJson.imdb_id;
+    
+    runOmdbMovieInfoGets(imdbId, movieDiv, scoreDiv, scores, title);
+}
+
+function runOmdbMovieInfoGets(imdbId, movieDiv, scoreDiv, scores, title) {
+    const omdbParams = {
+        apikey: omdbKey,
+        i: imdbId
+    };
+
+    const omdbMovieString = formatParams(omdbParams);
+    const searchOmdbMovieURL = omdbURL + omdbMovieString;
+
+    getMoviesForDisplay(searchOmdbMovieURL, movieDiv, scoreDiv, scores, title);
+}
+
+function getMoviesForDisplay(searchOmdbMovieURL, movieDiv, scoreDiv, scores, title) {
+
+    fetch(searchOmdbMovieURL)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new error(response.statusText);
+        })
+        .then(responseJson => testForFoundMovie(responseJson))
+        .then(responseJson => displayResults(responseJson, movieDiv, scoreDiv, scores, title))
+        .catch(err => {
+            $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
+        });
 }
 
 function testForFoundMovie(responseJson) {
     console.log(responseJson); 
     if (responseJson.Response == 'False') {
-        $('form').append(`<p class='not-found'>${responseJson.Error} <br> Check Spelling or if missing 'A' or 'The'</p>`);
+        $('form').append(`<p class='not-found'>${responseJson.Error}<br></p>`);
         $('section').addClass('hidden');
         $('form').removeClass('hidden');
     }
@@ -199,7 +296,7 @@ function runTmdbTrailerGet(responseJson, movieDiv) {
         language: 'en-US',
     }
 
-    const tmdbTrailerURL = trailerURL + responseJson.movie_results[0].id + '/videos?' + formatParams(tmdbParamTrailer);
+    const tmdbTrailerURL = movieURL + responseJson.movie_results[0].id + '/videos?' + formatParams(tmdbParamTrailer);
 
     getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv);
 }
@@ -214,7 +311,7 @@ function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
         })
         .then(responseJson => displayYoutubeById(responseJson, movieDiv))
         .catch(err => {
-            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+            $('#js-error-message').append(`Something went wrong: ${err.message} at 252<br>`);
     });
 }
 
@@ -230,28 +327,7 @@ function displayYoutubeById(responseJson, movieDiv) {
 
            break;
         }
-        else {
-            $(movieDiv).append(`<p class="js-movie-trailer">No Trailer Available</p>`);
-        }
     }
-}
-
-function showScoresList() {
-    $('#scores').find('.js-movie-rating').toggleClass('hidden');
-    $('.raters-list').toggleClass('hidden');
-}
-
-function showScoreButton() {
-    $('.score-button').removeClass('hidden');
-}
-
-function hideScoreButton() {
-    $('.score-button').addClass('hidden');
-}
-
-function showNavbar() {
-    $('nav').removeClass('hidden');
-    handleNavRestart();
 }
 
 function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
@@ -281,10 +357,43 @@ function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
     }
 }
 
+function showScoresList() {
+    $('#scores').find('.js-movie-rating').toggleClass('hidden');
+    $('.raters-list').toggleClass('hidden');
+    $('#scorecard').addClass('full-screen');
+}
+
+function showScoreButton() {
+    $('.score-button').removeClass('hidden');
+}
+
+function hideScoreButton() {
+    $('.score-button').addClass('hidden');
+}
+
+function showNavbar() {
+    $('nav').removeClass('hidden');
+    $('header h1').addClass('hidden');
+    handleNavRestart();
+}
+
+function hideResultsForm() {
+    $('#results-form').addClass('hidden');
+}
+
 function readyDisplay() {
     $('section').removeClass('hidden');
     $('.not-found').remove();
-    $('form').addClass('hidden');
+    $('#form-container').addClass('hidden');
+    $('#results-form').removeClass('hidden');
+}
+
+function handleReadyButton() {
+    $('#ready-button').on('click', event => {
+        event.preventDefault();        
+        runTmdbMovieDetailsGets();
+        hideResultsForm();
+    });
 }
 
 function handleScoreButton(){
@@ -310,25 +419,34 @@ function handleNavRestart() {
     });
 }
 
+function handleSearchRestart() {
+    $('#search-again').on('click', function(event) {
+        location.reload();
+    });
+}
+
 function handleScrollPastNav() {
     $('a.nav-scroll').on('click', function(event) {
         event.preventDefault(); 
         let target = $($(this).attr('href'));
         let scroll = $(target).offset().top - 80;
-        $('body, html').animate({ 'scrollTop': scroll }, 50);
+        $('body, html').animate({'scrollTop': scroll }, 50);
     });
 }
 
-function watchForm() {
-    $('form').submit(event => {
+function handleStartButton() {
+    $('#start-button').on('click', event => {
         event.preventDefault();
         readyDisplay();
         const movie1 = $('#movie-one').val();
         const movie2 = $('#movie-two').val();
-        console.log(movie1, movie2);
-        runMoviesGets(movie1, movie2);
+        runtmdbMovieSearchGets(movie1, movie2);
         showNavbar();
     });
+}
+
+function watchForm() {
+    handleStartButton();
     handleScoreButton();
     handleScrollPastNav();
 }

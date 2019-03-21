@@ -23,19 +23,34 @@
     </header>
 
     <main>
-        <form>
+        <form id="search-form" action="search">
             <div id="form-container">
-                <legend>Choose Your Combatants</legend>
+                <legend>Search For Your Combatants</legend>
                 <label>Champion:
-                    <input type="text" id="movie-one" placeholder="Pulp Fiction" required>
+                    <input type="text" id="movie-one" value="Pulp Fiction" required>
                 </label>
                 <br>
                 <label>Contender:
-                    <input type="text" id="movie-two" placeholder="Bad Boys" required>
+                    <input type="text" id="movie-two" value="Bad Boys" required>
                 </label>            
                 <br>
-                <input type="submit" value="Start the Fight!">
+                <input type="button" id="start-button" formaction="search" value="Start the Fight!">
                 <input type="reset" value="Clear">
+            </div>
+        </form>
+        <form id="results-form" class="hidden">
+            <div id="form-search-results">
+                <legend>Now select from search results</legend>
+                <label>Champion:
+                    <select id="js-search-one"></select>
+                </label>
+                <br>
+                <label>Contender:
+                    <select id="js-search-two"></select>
+                </label>
+                <br>
+                <input type="button" id="ready-button" value="Combatants Ready!">
+                <input type="button" id="search-again" value="Search Again?">
             </div>
             <p id=js-error-message></p>
         </form>    
