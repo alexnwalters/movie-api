@@ -225,24 +225,28 @@ function handleMovieDetails(responseJson, movieDiv) {
     $(movieDiv).empty();
     
     $(movieDiv).append(
-        `<div class='movie-details'>
-        <h2 class='js-movie-title'>${responseJson.Title}</h2>
-        <p class='js-movie-info'>${responseJson.Year} | Rated ${responseJson.Rated}</p>
-        <p class='js-movie-plot'>${responseJson.Plot}</p>
-        </div>
-        <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>`
+        `<h2 class='js-movie-title'>${responseJson.Title}</h2>
+        <div class='js-movie-details'>
+            <div class='js-movie-text'>
+                <p class='js-movie-info'>${responseJson.Year} | ${responseJson.Rated} | ${responseJson.Runtime}.</p>
+                <p class='js-movie-plot'>${responseJson.Plot}</p>
+            </div>
+            <div class='js-poster-container'>
+                <img src='${responseJson.Poster}' class='js-movie-poster' alt='Movie Poster'>
+            </div>
+        </div>`
     );
 }
 
 function handleMoviesRatings(responseJson, scoreDiv) {
-    $(scoreDiv).append(`<ul class='js-movie-rating hidden'>${responseJson.Title}:</ul>`);
+    $(scoreDiv).append(`<ul class='js-movie-rating hidden'></ul>`);
 
     if (responseJson.Ratings.length == 2) {
         $(scoreDiv + ' .js-movie-rating').append(
             `<li>${responseJson.Ratings[0].Value}</li>`
         );
 
-        if (responseJson.Ratings[1].Source == "Rotten Tomatoes") {
+        if (responseJson.Ratings[1].Source == 'Rotten Tomatoes') {
             $(scoreDiv + ' .js-movie-rating').append(
                 `<li>${responseJson.Ratings[1].Value}</li>
                 <li>No Score</li>`
@@ -318,16 +322,27 @@ function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
 function displayYoutubeById(responseJson, movieDiv) {
     console.log(responseJson);            
     for(let i = 0; i < responseJson.results.length; i++) {
-        if (responseJson.results[i].type == "Trailer") {
+        if (responseJson.results[i].type == 'Trailer') {
             $(movieDiv).append(
-                `<iframe class="js-movie-trailer" 
-                src="https://www.youtube.com/embed/${responseJson.results[i].key}"
-                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>`
+                `<div class='js-trailer-container'>
+                    <iframe class="js-movie-trailer" 
+                    src="https://www.youtube.com/embed/${responseJson.results[i].key}"
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>
+                </div>`
             );
 
            break;
         }
     }
+}
+
+function addTitleToScorecard(title1, title2) {
+    $('#score-titles').removeClass('hidden')
+    $('#score-titles').append(
+        `<li>${title1}</li>
+        <li>VS.</li>
+        <li>${title2}</li>`
+    );
 }
 
 function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
@@ -358,22 +373,24 @@ function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
 }
 
 function showScoresList() {
-    $('#scores').find('.js-movie-rating').toggleClass('hidden');
-    $('.raters-list').toggleClass('hidden');
-    $('#scorecard').addClass('full-screen');
+    $('#scores').find('ul').removeClass('hidden');
+    $('.js-movie-rating').addClass('js-movie-rating-flex');
+    $('#scorecard').addClass('score-full-screen');
 }
 
 function showScoreButton() {
-    $('.score-button').removeClass('hidden');
+    $('#score-button').removeClass('hidden');
+    $('#scorecard h3').removeClass('hidden');
 }
 
 function hideScoreButton() {
-    $('.score-button').addClass('hidden');
+    $('#score-button').addClass('hidden');
 }
 
 function showNavbar() {
     $('nav').removeClass('hidden');
     $('header h1').addClass('hidden');
+    $('.tagline').addClass('hidden')
     handleNavRestart();
 }
 
@@ -393,6 +410,7 @@ function handleReadyButton() {
         event.preventDefault();        
         runTmdbMovieDetailsGets();
         hideResultsForm();
+        showNavbar();
     });
 }
 
@@ -400,6 +418,7 @@ function handleScoreButton(){
     $('.score-button').on('click', function(event) {
         showScoresList();
         hideScoreButton();
+        addTitleToScorecard(title1, title2)
         compareMovieRatings(movieScores1, movieScores2, title1, title2);
         handleRestartButton();
         window.scrollBy(0, 2000);
@@ -441,7 +460,6 @@ function handleStartButton() {
         const movie1 = $('#movie-one').val();
         const movie2 = $('#movie-two').val();
         runtmdbMovieSearchGets(movie1, movie2);
-        showNavbar();
     });
 }
 

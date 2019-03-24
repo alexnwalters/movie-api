@@ -13,7 +13,7 @@
         <h1>Box Office Brawl</h1>
         
         <nav role="navigation" id="navbar" class="hidden">
-            <div class="nav-list">
+            <div id="nav-list">
                 <a href="#js-movie-one" class="nav-scroll">Champion</a>
                 <a href="#js-movie-two" class="nav-scroll">Contender</a>
                 <a href="#scorecard" class="nav-scroll">Scorecard</a>
@@ -27,7 +27,7 @@
             <div id="form-container">
                 <legend>Search For Your Combatants</legend>
                 <label>Champion:
-                    <input type="text" id="movie-one" value="Pulp Fiction" required>
+                    <input type="text" id="movie-one" value="Lord of the Rings" required>
                 </label>
                 <br>
                 <label>Contender:
@@ -56,16 +56,20 @@
         </form>    
    
         <section class="movie-display">
-            <p>When two movies enter only one will leave victorious!</p>
+            <p class="tagline">When two movies enter only one will leave victorious!</p>
             <div id="js-movie-one"></div>
             <div id="js-movie-two"></div>
         </section>
 
         <section id="scorecard">
-            <div id="scores"> 
+            <h3 class="hidden">Scorecard</h3>
+            <div>
+                <ul id="score-titles" class="hidden"></ul>
+            </div>
+            <div id="scores">
                 <div id="js-score-one"></div>
                 <div id="raters">
-                    <ul class="raters-list hidden"> Judge:
+                    <ul class="raters-list hidden">
                         <li>IMDb</li>
                         <li>Rotten Tomatoes</li>
                         <li>Metacritic</li>
@@ -73,8 +77,8 @@
                 </div>
                 <div id="js-score-two"></div>
             </div>
-            <div id="score-button">
-                <button class="score-button hidden" type="button">Show Score!</button>
+            <div id="score-button" class="hidden">
+                <button class="score-button" type="button">Show Score!</button>
             </div>
         </section>
     </main>
