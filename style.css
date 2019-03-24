@@ -62,10 +62,14 @@ form div {
 
 select, input[type=text], input[type=button], input[type=reset] {
     width: 80vw;
-    font-size: 100%;
 }
 
 legend, input, select {
+    margin-bottom: 8px;
+    font-size: 100%;
+}
+
+input, select, textarea {
     margin-bottom: 8px;
     font-size: 100%;
 }
