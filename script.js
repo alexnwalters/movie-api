@@ -426,9 +426,10 @@ function handleScoreButton(){
 }
 
 function handleRestartButton() {
-    $('#scorecard').append('<button class="restart-button" type="button">Here Comes A New Challenger!</button>')
+    $('#scorecard').append('<div id="restart-button"><button class="restart-button" type="button">Here Comes A New Challenger!</button></div>')
     $('.restart-button').on('click', function(event) {
-        location.reload();
+        location.href = location.href;
+           
     });
 }
 

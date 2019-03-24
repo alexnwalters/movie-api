@@ -47,12 +47,20 @@ header {
 }
 
 
-form {
+#form-container, #form-search-results {
     margin: 0 auto;
+    height: 50vh;
 }
 
-select, input[type=text] {
-    width: 80%;
+form div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+select, input[type=text], input[type=button], input[type=reset] {
+    width: 80vw;
 }
 
 legend, input, select {
@@ -116,7 +124,6 @@ section {
 }
 
 #scorecard {
-    min-height: 20vh;
     margin-bottom: 30px;
     display: flex;
     flex-direction: column;
@@ -153,6 +160,75 @@ section {
     height: 70vh;
 }
 
+@media screen and (min-width: 780px) {
+    section {
+        display: hidden;
+    }
 
+    a[href="#js-movie-one"], a[href="#js-movie-two"]  {
+        display: none;
+    }
 
+    main {
+        font-size: 24px;
+    }
 
+    h1 {
+        font-size: 48px;
+    }
+
+    select, input[type=text], input[type=button], input[type=reset], button {
+        max-width: 625px;
+    }
+
+    .movie-display {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #js-movie-one, #js-movie-two {
+        width: 45vw;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        margin-bottom: 30px;
+    }
+
+    p .tagline {
+        display: inline-block;
+        margin: 0 auto;
+     }
+
+    .js-movie-title {
+        min-height: 14vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+     
+    .js-movie-details {
+        display: flex;
+        flex-direction: column-reverse;
+        margin: 20px 0;
+        height: 70%;
+    }
+    
+    .js-movie-text {
+        display: unset;
+        margin: 10px 0;
+    }
+    
+    .js-poster-container {
+        width: unset;
+    }
+    
+    .js-movie-poster {
+        max-width: unset;
+        height: unset;
+    }
+}
+/* 
+@media screen and (min-width: 1030px) {
+    
+} */
