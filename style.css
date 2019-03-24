@@ -160,7 +160,7 @@ section {
     height: 70vh;
 }
 
-@media screen and (min-width: 780px) {
+@media screen and (min-width: 760px) {
     section {
         display: hidden;
     }
@@ -201,7 +201,7 @@ section {
      }
 
     .js-movie-title {
-        min-height: 14vh;
+        min-height: 12vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -211,7 +211,7 @@ section {
         display: flex;
         flex-direction: column-reverse;
         margin: 20px 0;
-        height: 70%;
+        height: 65%;
     }
     
     .js-movie-text {
