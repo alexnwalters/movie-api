@@ -259,6 +259,13 @@ function handleMoviesRatings(responseJson, scoreDiv) {
             );
         }
     }
+    else if (responseJson.Ratings.length == 1) {
+        $(scoreDiv + ' .js-movie-rating').append(
+            `<li>${responseJson.Ratings[0].Value}</li>
+            <li>No Score</li>
+            <li>No Score</li>`
+        );
+    }
     else {
         for (let i = 0; i < responseJson.Ratings.length; i++) {
             $(scoreDiv + ' .js-movie-rating').append(
