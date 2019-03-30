@@ -41,6 +41,10 @@ h1 {
     text-transform: uppercase;
 }
 
+h3 {
+    font-family: anton;
+}
+
 .tagline {
     margin: 0px 20px;
     color:#807F90;
@@ -115,14 +119,14 @@ legend {
 input[type=text], select, textarea {
     font-size: 100%;
     font-family: montserrat;
-    background: linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgb(216, 7, 49, .01));
+    background: linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgba(216, 7, 49, .01));
     border: none;
-    border-bottom: 2px solid rgb(216, 7, 49);
-    border-left: 2px solid rgb(216, 7, 49);
+    border-bottom: 2px solid rgba(216, 7, 49);
+    border-left: 2px solid rgba(216, 7, 49);
 }
 
 input[type=text]:focus {
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgb(216, 7, 49, .1), rgb(216, 7, 49, .01));
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .1), rgba(216, 7, 49, .01));
     outline: none;
 }
 
