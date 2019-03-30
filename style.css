@@ -23,8 +23,6 @@ body {
     background-image: -webkit-linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
     background-image: -moz-linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
     background-size: contain;
-    -webkit-appearance: none;
-    -moz-appearance: none;
 }
 
 main {
@@ -154,6 +152,8 @@ input[type=button], input[type=submit], input[type=reset], button {
     border-radius: 16px;
     padding: 8px 16px;
     margin-bottom: 10px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 section {
