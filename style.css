@@ -10,11 +10,17 @@
 
 html {
     scroll-behavior: smooth;
+    height: 100%;
 }
 
 body {
     text-align: center;
     font-size: 16px;
+    font-family: montserrat;
+    color: #212c2c;
+    height: 100%;
+    background-image: linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
+    background-size: contain;
 }
 
 main {
@@ -29,6 +35,18 @@ header {
     padding: 10px 0;
 }
 
+h1 {
+    font-family: anton;
+    font-size: 42px;
+    text-transform: uppercase;
+}
+
+.tagline {
+    margin: 0px 20px;
+    color:#807F90;
+    font-weight: bold;
+ }
+
 #navbar {
     position: fixed;
     top: 0;
@@ -41,16 +59,33 @@ header {
 #nav-list {
     display: flex;
     justify-content: space-around;
+    font-size: 12px;
 }
 
-#nav-list a:link {
+a {
+    cursor: pointer;
+}
+
+a:link, a:visited {
     text-decoration: none;
+    color: unset;
 }
 
+a:hover {
+    font-weight: bolder;
+    color: #d80731;
+}
 
 #form-container, #form-search-results {
-    margin: 0 auto;
-    height: 50vh;
+    height: 60vh;
+    margin: 0px 20px;
+    background-image: linear-gradient(to bottom right, rgba(216, 7, 49, 0.8), rgba(0, 0, 0, 0.3));
+    background-color: #d80731;
+    padding: 10px;
+    border-radius: 4px;
+    -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+    -moz-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+    box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
 }
 
 form div {
@@ -60,26 +95,58 @@ form div {
     justify-content: space-evenly;
 }
 
-select, input[type=text], input[type=button], input[type=reset] {
+select, input[type=text] {
     width: 80vw;
 }
 
-legend, input, select {
-    margin-bottom: 8px;
-    font-size: 100%;
+label {
+    font-family: montserrat;
+    font-size: 20px;
+    text-align: left;
+    color: white;
 }
 
-input, select, textarea {
-    margin-bottom: 8px;
+legend {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input[type=text], select, textarea {
     font-size: 100%;
+    font-family: montserrat;
+    background: linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgb(216, 7, 49, .01));
+    border: none;
+    border-bottom: 2px solid rgb(216, 7, 49);
+    border-left: 2px solid rgb(216, 7, 49);
+}
+
+input[type=text]:focus {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgb(216, 7, 49, .1), rgb(216, 7, 49, .01));
+    outline: none;
+}
+
+::placeholder {
+    color: black;
+}
+
+input[type=button], input[type=submit], input[type=reset], button {
+    font-family: montserrat;
+    font-size: 16px;
+    color: white;
+    text-shadow: 0 0 3px #212c2c;
+    background: #d80731;
+    border: none;
+    border-radius: 16px;
+    padding: 8px 16px;
+    margin-bottom: 10px;
 }
 
 section {
     padding: 0 10px;
 }
 
-.movie-display {
-    display: inline-block;
+#movie-display {
     width: 100vw;
 }
 
@@ -92,13 +159,26 @@ section {
 
 .js-movie-details {
     display: flex;
-    margin: 20px 0;
+    margin: 20px 0px;
+    border-radius: 4px;
+    background:#d1a675;
+    -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+    -moz-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+    box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+}
+
+.js-movie-title {
+    font-family: anton;
 }
 
 .js-movie-text {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    font-size: 14px;
+    font-weight: bold;
+    color: #212c2c;
+    padding: 6px;
 }
 
 .js-movie-plot {
@@ -106,12 +186,14 @@ section {
 }
 
 .js-poster-container {
+    margin-top: -20px;
     width: 40vw;
 }
 
 .js-movie-poster {
     max-width: 40vw;
     height: auto;
+    border-radius: 6px;
 }
 
 .js-trailer-container {
@@ -119,6 +201,9 @@ section {
     overflow: hidden;
     padding-top: 56.25%;
     z-index: -1;
+    -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.8);
+    -moz-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.8);
+    box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.8);
 }
 
 .js-movie-trailer {
@@ -130,11 +215,23 @@ section {
     border: 0;
 }
 
-#scorecard {
-    margin-bottom: 30px;
+.js-score-flex {
+    margin: 0px 10px;
+    margin-bottom: 30px;    
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    background-image: linear-gradient(to bottom right, rgba(233, 238, 231, 0.8), rgba(0, 0, 0, 0.3));
+    background-color: rgba(233, 238, 231);
+    padding: 10px;
+    border-radius: 4px;
+    -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+    -moz-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+    box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
+}
+
+#scorecard h3 {
+    margin-bottom: 10px;
 }
 
 #score-titles {
@@ -167,25 +264,67 @@ section {
     height: 70vh;
 }
 
+.winner {
+    font-size: 120%;
+    font-weight: bolder;
+}
+
+.winner-name {
+    color: #d80731;
+}
+
 @media screen and (min-width: 760px) {
     section {
         display: hidden;
+    }
+
+    #nav-list {
+        font-size: 20px;
     }
 
     a[href="#js-movie-one"], a[href="#js-movie-two"]  {
         display: none;
     }
 
-    main {
-        font-size: 24px;
-    }
-
     h1 {
         font-size: 48px;
     }
 
-    select, input[type=text], input[type=button], input[type=reset], button {
-        max-width: 625px;
+    h2 {
+        font-size: 40px;
+    }
+
+    h3 {
+        font-size: 32px;
+    }
+
+    .tagline {
+        font-size: 32px;
+        width: 66vw;
+        margin: 0 auto;
+    }
+
+    .tagline, #form-container, #form-search-results {
+        width: 70vw;
+        margin: 0 auto;      
+    }
+
+    label {
+        font-size: 32px;
+    }
+    
+    legend {
+        font-size: 36px;
+    }
+    
+    input[type=submit], input[type=button], input[type=reset], button {
+        font-size: 32px;
+        border-radius: 20px;
+        padding: 10px 20px;
+    }
+
+    select, input[type=text] {
+        width: 65vw;
     }
 
     .movie-display {
@@ -202,13 +341,8 @@ section {
         margin-bottom: 30px;
     }
 
-    p .tagline {
-        display: inline-block;
-        margin: 0 auto;
-     }
-
     .js-movie-title {
-        min-height: 12vh;
+        min-height: 20vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -224,6 +358,11 @@ section {
     .js-movie-text {
         display: unset;
         margin: 10px 0;
+        font-size: 20px;
+    }
+
+    .js-movie-info {
+        margin-bottom: 10px;
     }
     
     .js-poster-container {
@@ -234,8 +373,27 @@ section {
         max-width: unset;
         height: unset;
     }
+
+    #score-titles {
+        font-size: 32px;
+    }
+
+    #scores {
+        font-size: 28px;
+    }
 }
-/* 
+
 @media screen and (min-width: 1030px) {
-    
-} */
+    .js-movie-text {
+        font-size: 24px;
+        margin: 20px;
+    }
+
+    h2 {
+        font-size: 48px;
+    }
+
+    .js-movie-info {
+        margin-bottom: 20px;
+    }
+}

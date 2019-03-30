@@ -7,28 +7,31 @@
     <title>Movie API Project</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Anton|Montserrat" rel="stylesheet">
 </head>
-<body>
+<body>          
+    <nav role="navigation" id="navbar" class="hidden">
+        <div id="nav-list">
+            <a href="#js-movie-one" class="nav-scroll">Champion</a>
+            <a href="#js-movie-two" class="nav-scroll">Contender</a>
+            <a href="#scorecard" class="nav-scroll">Scorecard</a>
+            <a id="nav-restart">Restart</a>
+        </div>
+    </nav>
+
     <header>
         <h1>Box Office Brawl</h1>
-        
-        <nav role="navigation" id="navbar" class="hidden">
-            <div id="nav-list">
-                <a href="#js-movie-one" class="nav-scroll">Champion</a>
-                <a href="#js-movie-two" class="nav-scroll">Contender</a>
-                <a href="#scorecard" class="nav-scroll">Scorecard</a>
-                <a id="nav-restart">Restart</a>
-            </div>
-        </nav>
+
+        <p class="tagline">When two movies enter only one will leave victorious!</p>
     </header>
 
     <main>
-        <form id="search-form" action="search">
+        <form id="search-form" action="javascript:handleStartButton();">
             <div id="form-container">
                 <legend>Search For Your Combatants</legend>
                 <label>Champion:
                     <br>
-                    <input type="text" id="movie-one" value="Lord of the Rings" required>
+                    <input type="text" id="movie-one" value="Pulp Fiction" required>
                 </label>
                 <br>
                 <label>Contender:
@@ -36,8 +39,8 @@
                     <input type="text" id="movie-two" value="Bad Boys" required>
                 </label>            
                 <br>
-                <input type="button" id="start-button" formaction="search" value="Start the Fight!">
-                <input type="reset" value="Clear">
+                <input type="submit" id="start-button" value="Start the Fight!"></button>
+                <input type="reset" value="Clear"></button>
             </div>
         </form>
         <form id="results-form" class="hidden">
@@ -59,15 +62,14 @@
             <p id=js-error-message></p>
         </form>    
         
-        <p class="tagline">When two movies enter only one will leave victorious!</p>
-        
-        <section class="movie-display"> 
+
+        <section id="movie-display" class="movie-display hidden"> 
             <div id="js-movie-one"></div>
             <div id="js-movie-two"></div>
         </section>
 
-        <section id="scorecard">
-            <h3 class="hidden">Scorecard</h3>
+        <section id="scorecard" class="hidden">
+            <h3>Scorecard</h3>
             <div>
                 <ul id="score-titles" class="hidden"></ul>
             </div>
@@ -82,7 +84,7 @@
                 </div>
                 <div id="js-score-two"></div>
             </div>
-            <div id="score-button" class="hidden">
+            <div id="score-button">
                 <button class="score-button" type="button">Show Score!</button>
             </div>
         </section>

@@ -249,12 +249,12 @@ function handleMoviesRatings(responseJson, scoreDiv) {
         if (responseJson.Ratings[1].Source == 'Rotten Tomatoes') {
             $(scoreDiv + ' .js-movie-rating').append(
                 `<li>${responseJson.Ratings[1].Value}</li>
-                <li>No Score</li>`
+                <li>N/A</li>`
             );
         }
         else {
             $(scoreDiv + ' .js-movie-rating').append(
-                `<li>No Score</li>
+                `<li>N/A</li>
                 <li>${responseJson.Ratings[1].Value}</li>`
             );
         }
@@ -262,8 +262,8 @@ function handleMoviesRatings(responseJson, scoreDiv) {
     else if (responseJson.Ratings.length == 1) {
         $(scoreDiv + ' .js-movie-rating').append(
             `<li>${responseJson.Ratings[0].Value}</li>
-            <li>No Score</li>
-            <li>No Score</li>`
+            <li>N/A</li>
+            <li>N/A</li>`
         );
     }
     else {
@@ -369,10 +369,12 @@ function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
     }
 
     if (winsMovie1 > winsMovie2) {
-        $('#scorecard').append(`<h3>TKO! ${title1} Wins!</h3>`);
+        $('#scorecard').append(`<h3>TKO! <span class="winner-name">${title1}</span> Wins!</h3>`);
+        $('#js-score-one').addClass('winner');
     }
     else if (winsMovie1 < winsMovie2) {
-        $('#scorecard').append(`<h3>The New Champion Is ${title2}!</h3>`);
+        $('#scorecard').append(`<h3>The New Champion Is <span class="winner-name">${title2}</span>!</h3>`);
+        $('#js-score-two').addClass('winner');
     }
     else {
         $('#scorecard').append(`<h3>It's A Draw!</h3>`)
@@ -386,8 +388,8 @@ function showScoresList() {
 }
 
 function showScoreButton() {
-    $('#score-button').removeClass('hidden');
-    $('#scorecard h3').removeClass('hidden');
+    $('#scorecard').removeClass('hidden');
+    $('#scorecard').addClass('js-score-flex');
 }
 
 function hideScoreButton() {
@@ -406,7 +408,7 @@ function hideResultsForm() {
 }
 
 function readyDisplay() {
-    $('section').removeClass('hidden');
+    $('#movie-display').removeClass('hidden');
     $('.not-found').remove();
     $('#form-container').addClass('hidden');
     $('#results-form').removeClass('hidden');
@@ -462,17 +464,13 @@ function handleScrollPastNav() {
 }
 
 function handleStartButton() {
-    $('#start-button').on('click', event => {
-        event.preventDefault();
-        readyDisplay();
-        const movie1 = $('#movie-one').val();
-        const movie2 = $('#movie-two').val();
-        runtmdbMovieSearchGets(movie1, movie2);
-    });
+    readyDisplay();
+    const movie1 = $('#movie-one').val();
+    const movie2 = $('#movie-two').val();
+    runtmdbMovieSearchGets(movie1, movie2);
 }
 
 function watchForm() {
-    handleStartButton();
     handleScoreButton();
     handleScrollPastNav();
 }
