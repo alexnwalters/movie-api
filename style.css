@@ -23,6 +23,8 @@ body {
     background-image: -webkit-linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
     background-image: -moz-linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
     background-size: contain;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 main {
@@ -127,8 +129,8 @@ input[type=text], select, textarea {
     background: -webkit-linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgba(216, 7, 49, .01));
     background: -moz-linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgba(216, 7, 49, .01));
     border: none;
-    border-bottom: 2px solid rgba(216, 7, 49);
-    border-left: 2px solid rgba(216, 7, 49);
+    border-bottom: 2px solid #d80731;
+    border-left: 2px solid #d80731;
 }
 
 input[type=text]:focus {
@@ -139,13 +141,13 @@ input[type=text]:focus {
 }
 
 ::placeholder {
-    color: black;
+    color: #000000;
 }
 
 input[type=button], input[type=submit], input[type=reset], button {
     font-family: montserrat;
     font-size: 16px;
-    color: white;
+    color: #ffffff;
     text-shadow: 0 0 3px #212c2c;
     background: #d80731;
     border: none;
