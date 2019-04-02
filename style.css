@@ -45,11 +45,12 @@ h1 {
 
 h3 {
     font-family: anton;
+    text-transform: uppercase;
 }
 
 .tagline {
     margin: 0px 20px;
-    color:#807F90;
+    color:#807f90;
     font-weight: bold;
  }
 
@@ -108,7 +109,7 @@ select, input[type=text] {
 }
 
 label {
-    font-family: montserrat;
+    font-family: anton;
     font-size: 20px;
     text-align: left;
     color: white;
@@ -131,6 +132,18 @@ input[type=text], select, textarea {
     border-left: 2px solid #d80731;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 input[type=text]:focus {
     background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .1), rgba(216, 7, 49, .01));
     background: -webkit-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .1), rgba(216, 7, 49, .01));
@@ -139,7 +152,7 @@ input[type=text]:focus {
 }
 
 ::placeholder {
-    color: #000000;
+    color: rgba(0, 0, 0, 0.356);
 }
 
 input[type=button], input[type=submit], input[type=reset], button {
@@ -175,7 +188,7 @@ section {
     display: flex;
     margin: 20px 0px;
     border-radius: 4px;
-    background:#d1a675;
+    background-color: white;
     -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
     -moz-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
     box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
@@ -183,6 +196,8 @@ section {
 
 .js-movie-title {
     font-family: anton;
+    color: #d80731;
+    text-transform: uppercase;
 }
 
 .js-movie-text {
@@ -235,10 +250,7 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    background-image: linear-gradient(to bottom right, rgba(233, 238, 231, 0.8), rgba(0, 0, 0, 0.3));
-    background-image: -webkit-linear-gradient(to bottom right, rgba(233, 238, 231, 0.8), rgba(0, 0, 0, 0.3));
-    background-image: -moz-linear-gradient(to bottom right, rgba(233, 238, 231, 0.8), rgba(0, 0, 0, 0.3));
-    background-color: rgba(233, 238, 231);
+    background-color: white;
     padding: 10px;
     border-radius: 4px;
     -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
@@ -287,6 +299,10 @@ section {
 
 .winner-name {
     color: #d80731;
+}
+
+footer {
+    color: #081c24;
 }
 
 @media screen and (min-width: 760px) {
@@ -411,5 +427,9 @@ section {
 
     .js-movie-info {
         margin-bottom: 20px;
+    }
+
+    .js-movie-plot {
+        line-height: 30px;
     }
 }

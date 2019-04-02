@@ -43,7 +43,9 @@ function runtmdbMovieSearchGets(movie1, movie2) {
 
 function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
     const movie1Results = '#js-search-one';
-    const movie2Results = '#js-search-two'; 
+    const movie2Results = '#js-search-two';
+    const errorMovie1 = 'Movie 1';
+    const errorMovie2 = 'Movie 2';
    
     fetch(searchMovie1URL)
         .then(response => {
@@ -52,6 +54,7 @@ function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
+        .then(responseJson => testForSearchReturn(responseJson, errorMovie1))
         .then(responseJson => displayFoundMovieOptions(responseJson, movie1Results))
         .catch(err => {
             $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
@@ -63,6 +66,7 @@ function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
             }
             throw new error(response.statusText);
         })
+        .then(responseJson => testForSearchReturn(responseJson, errorMovie2))
         .then(responseJson => displayFoundMovieOptions(responseJson, movie2Results))
         .catch(err => {
             $('#js-error-message').append(`Something went wrong: ${err.message}<br>`);
@@ -72,9 +76,16 @@ function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
     handleSearchRestart();
 }
 
-function displayFoundMovieOptions(responseJson, movieResultsList) {
-    //$('#js-error-message').empty();
+function testForSearchReturn(responseJson, movieError) {
+    if(responseJson.results.length !== 0) {
+        return responseJson;
+    }
+    else {
+        if(!alert(`${movieError} was not found. Please search Again.`)){window.location.reload();}
+    };
+}
 
+function displayFoundMovieOptions(responseJson, movieResultsList) {
     for (let i = 0; i < responseJson.results.length && i < 10; i++) {
         $(movieResultsList).append(
             `<option value='${responseJson.results[i].id}'>
