@@ -10,17 +10,26 @@ The inspiration for this project came about over a debate between and a friend a
 
 ### Usage
 ---
+
+**Search Screen:**
+
 Right from the main page, the user will be able to first input two movies to search for.  I added the search feature midway through my design after one user pointed out that many movies have remakes or the same title as a completely different film.  Here is where we make our first API call using the query parameter available through TMDb API.
 
 ![Search Screen](https://github.com/alexnwalters/movie-api/blob/master/images/movie-api-search.png "Search Form")
+
+**Search Results List:**
 
 Once the user submits the search inputs if the movies return any search results they will be selectable in a select input dropdown.  If no results are found the user will be alerted to which movie input return 0 results and the app will reload to the search form. If the user agrees if the returned results they can elect to move on the display screen or start over.  This confirmation step allowed us to confirm the movie the user would like to compare and pull its IMDb Id, this Id is used by both TMDb API and the OMDb API.
 
 ![Search Results Screen](https://github.com/alexnwalters/movie-api/blob/master/images/movie-api-select.png "Results Form")
 
+**Movie Display:**
+
 At this point the two movies will be displayed, allowing the user to compare their movie posters, audience rating, runtime, plot and even an embedded movie trailer if available. The OMDb API returns better information for the movies and is used first, but the TMDb API has a trailer search feature, so we then go back to that to pull the youtube video id to be displayed.
 
 ![Display Screen](https://github.com/alexnwalters/movie-api/blob/master/images/movie-api-info.png "Display")
+
+**Scorecard:**
 
 Once the user is satisfied with reviewing the movie's description they can reveal the scorecard and display winning results.  The winning movies’ scores will be revealed larger and the winner will be announced at the bottom of the scorecard.  At this point, the user can continue to review the information or choose to start another comparison. The OMDd API has the scores from each available site for most movies so it is where we pull the scores from.
 
@@ -40,4 +49,5 @@ Although this was just a project to test using APIs, there are more potential fe
 ### Thanks
 ---
 The Movie Database
+
 The Open Movie Database
