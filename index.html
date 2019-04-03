@@ -26,8 +26,8 @@
     </header>
 
     <main>
-        <form id="search-form" action="javascript:handleStartButton();">
-            <div id="form-container">
+        <form id="search-form" >
+            <div id="form-container" action="javascript:;" onsubmit="handleStartButton()">
                 <legend>Search For Your Combatants</legend>
                 <label>Champion:
                     <br>
@@ -39,8 +39,8 @@
                     <input type="text" id="movie-two" placeholder="Movie 2: Bad Boys" required>
                 </label>            
                 <br>
-                <input type="submit" id="start-button" value="Start the Fight!"></button>
-                <input type="reset" value="Clear"></button>
+                <input type="submit" id="start-button" value="Start the Fight!">
+                <input type="reset" value="Clear">
             </div>
         </form>
         <form id="results-form" class="hidden">

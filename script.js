@@ -15,11 +15,13 @@ const movieScores2 = [];
 const title1 = [];
 const title2 = [];
 
+
 function formatParams(params) {
-    const queryItems = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+    const queryItems = Object.keys(params).map(function(key) {return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`});
     return queryItems.join('&');
 }
 
+//create the API string and call the TMDb API search
 function runtmdbMovieSearchGets(movie1, movie2) {
     const tmdbSearchParam1 = {
         api_key: tmdbKey,
@@ -41,6 +43,7 @@ function runtmdbMovieSearchGets(movie1, movie2) {
     getSearchTmdbMovies(searchMovie1URL, searchMovie2URL);
 }
 
+//make requests to TMDb API search/movie endpoint
 function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
     const movie1Results = '#js-search-one';
     const movie2Results = '#js-search-two';
@@ -76,6 +79,7 @@ function getSearchTmdbMovies(searchMovie1URL, searchMovie2URL) {
     handleSearchRestart();
 }
 
+//test for succussful movie search
 function testForSearchReturn(responseJson, movieError) {
     if(responseJson.results.length !== 0) {
         return responseJson;
@@ -85,6 +89,7 @@ function testForSearchReturn(responseJson, movieError) {
     };
 }
 
+//create the select input options for search results
 function displayFoundMovieOptions(responseJson, movieResultsList) {
     for (let i = 0; i < responseJson.results.length && i < 10; i++) {
         $(movieResultsList).append(
@@ -95,6 +100,7 @@ function displayFoundMovieOptions(responseJson, movieResultsList) {
     }
 }
 
+//create the API string and call the TMDb API Movie details
 function runTmdbMovieDetailsGets() {
     const idMovie1 = 'js-search-one';
     const idMovie2 = 'js-search-two';  
@@ -111,6 +117,7 @@ function runTmdbMovieDetailsGets() {
     getDetailsTmdbMovies(details1MovieURL, details2MovieURL);
 }
 
+//make requests to TMDb API movie endpoint
 function getDetailsTmdbMovies(details1MovieURL, details2MovieURL) {
     const movieDivId1 = '#js-movie-one';
     const movieDivId2 = '#js-movie-two';
@@ -142,12 +149,14 @@ function getDetailsTmdbMovies(details1MovieURL, details2MovieURL) {
         });
 }
 
+//pull the IMDb Id from the TMDb movie details response
 function useTmdbIdtoGetImdbId(responseJson, movieDiv, scoreDiv, scores, title) {
     let imdbId = responseJson.imdb_id;
     
     runOmdbMovieInfoGets(imdbId, movieDiv, scoreDiv, scores, title);
 }
 
+//create the API string and call the OMDb API Movie details
 function runOmdbMovieInfoGets(imdbId, movieDiv, scoreDiv, scores, title) {
     const omdbParams = {
         apikey: omdbKey,
@@ -160,6 +169,7 @@ function runOmdbMovieInfoGets(imdbId, movieDiv, scoreDiv, scores, title) {
     getMoviesForDisplay(searchOmdbMovieURL, movieDiv, scoreDiv, scores, title);
 }
 
+//make requests to OMDb API imdId endpoint
 function getMoviesForDisplay(searchOmdbMovieURL, movieDiv, scoreDiv, scores, title) {
 
     fetch(searchOmdbMovieURL)
@@ -176,8 +186,8 @@ function getMoviesForDisplay(searchOmdbMovieURL, movieDiv, scoreDiv, scores, tit
         });
 }
 
-function testForFoundMovie(responseJson) {
-    console.log(responseJson); 
+//test OMDb response for returned movie
+function testForFoundMovie(responseJson) { 
     if (responseJson.Response == 'False') {
         $('form').append(`<p class='not-found'>${responseJson.Error}<br></p>`);
         $('section').addClass('hidden');
@@ -189,6 +199,7 @@ function testForFoundMovie(responseJson) {
     }    
 }
 
+//run functions that will build out display of movie details and scores
 function displayResults(responseJson, movieDiv, scoreDiv, scores, title) {
     $('#js-error-message').empty(); 
     handleMovieDetails(responseJson, movieDiv);
@@ -232,6 +243,7 @@ function storeRatings(responseJson, scores) {
     return scores;
 }
 
+//add html for movies to be displayed
 function handleMovieDetails(responseJson, movieDiv) {
     $(movieDiv).empty();
     
@@ -249,6 +261,7 @@ function handleMovieDetails(responseJson, movieDiv) {
     );
 }
 
+//add html for scores display
 function handleMoviesRatings(responseJson, scoreDiv) {
     $(scoreDiv).append(`<ul class='js-movie-rating hidden'></ul>`);
 
@@ -286,6 +299,7 @@ function handleMoviesRatings(responseJson, scoreDiv) {
     }
 }
 
+//create the API string and call the TMDb API again using IMDbId
 function runTmdbFindGet(omdbResponse, movieDiv) {
     const tmdbParamFind = {
         api_key: tmdbKey,
@@ -298,6 +312,7 @@ function runTmdbFindGet(omdbResponse, movieDiv) {
     getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv);
 }
 
+//make requests to TMDb API find endpoint
 function getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv) {
     fetch(tmdbFindURL)
         .then(response => {
@@ -312,6 +327,7 @@ function getUseImdbIdtoFindTmdbId(tmdbFindURL, movieDiv) {
     });
 }
 
+//create the API string and call the TMDb API for trailers
 function runTmdbTrailerGet(responseJson, movieDiv) {
     const tmdbParamTrailer = {
         api_key: tmdbKey,
@@ -323,6 +339,7 @@ function runTmdbTrailerGet(responseJson, movieDiv) {
     getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv);
 }
 
+//make request to TMDb API videos endpoint
 function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
     fetch(tmdbTrailerURL)
         .then(response => {
@@ -337,8 +354,8 @@ function getUseTmdbIdtofindYoutubeId(tmdbTrailerURL, movieDiv) {
     });
 }
 
-function displayYoutubeById(responseJson, movieDiv) {
-    console.log(responseJson);            
+//embed the movie trailers
+function displayYoutubeById(responseJson, movieDiv) {        
     for(let i = 0; i < responseJson.results.length; i++) {
         if (responseJson.results[i].type == 'Trailer') {
             $(movieDiv).append(
@@ -363,6 +380,7 @@ function addTitleToScorecard(title1, title2) {
     );
 }
 
+//compare the array of scores and determine the winner
 function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
     let winsMovie1 = 0;
     let winsMovie2 = 0;
@@ -475,6 +493,7 @@ function handleScrollPastNav() {
 }
 
 function handleStartButton() {
+    console.log('ran start');
     readyDisplay();
     const movie1 = $('#movie-one').val();
     const movie2 = $('#movie-two').val();
