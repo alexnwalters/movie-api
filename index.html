@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Anton|Montserrat" rel="stylesheet">
 </head>
-<body>          
+<body class="gloves-background">          
     <nav role="navigation" id="navbar" class="hidden">
         <div id="nav-list">
             <a href="#js-movie-one" class="nav-scroll">Champion</a>
@@ -22,41 +22,41 @@
     <header>
         <h1>Box Office Brawl</h1>
 
-        <p class="tagline">When two movies enter only one will leave victorious!</p>
+        <p class="tagline">Where two movies enter, only one will leave victorious!</p>
     </header>
 
     <main>
-        <form id="search-form" >
-            <div id="form-container" action="javascript:;" onsubmit="handleStartButton()">
+        <form id="search-form" action="javascript:;" onsubmit="handleStartButton()">
+            <div id="form-container">
                 <legend>Search For Your Combatants</legend>
-                <label>Champion:
+                <label class="champion-color">Champion:
                     <br>
                     <input type="text" id="movie-one" placeholder="Movie 1: Pulp Fiction" required>
                 </label>
                 <br>
-                <label>Contender:
+                <label class="contender-color">Contender:
                     <br>
                     <input type="text" id="movie-two" placeholder="Movie 2: Bad Boys" required>
                 </label>            
                 <br>
-                <input type="submit" id="start-button" value="Start the Fight!">
+                <input type="submit" id="start-button" value="Search Movie Titles">
                 <input type="reset" value="Clear">
             </div>
         </form>
         <form id="results-form" class="hidden">
             <div id="form-search-results">
                 <legend>Now select from search results</legend>
-                <label>Champion:
+                <label class="champion-color">Champion:
                     <br>
                     <select id="js-search-one"></select>
                 </label>
                 <br>
-                <label>Contender:
+                <label class="contender-color">Contender:
                     <br>
                     <select id="js-search-two"></select>
                 </label>
                 <br>
-                <input type="button" id="ready-button" value="Combatants Ready!">
+                <input type="button" id="ready-button" value="Start the Brawl!">
                 <input type="button" id="search-again" value="Search Again?">
             </div>
             <p id=js-error-message></p>

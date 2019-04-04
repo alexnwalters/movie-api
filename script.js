@@ -17,7 +17,7 @@ const title2 = [];
 
 
 function formatParams(params) {
-    const queryItems = Object.keys(params).map(function(key) {return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`});
+    const queryItems = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
     return queryItems.join('&');
 }
 
@@ -360,9 +360,9 @@ function displayYoutubeById(responseJson, movieDiv) {
         if (responseJson.results[i].type == 'Trailer') {
             $(movieDiv).append(
                 `<div class='js-trailer-container'>
-                    <iframe class="js-movie-trailer" 
-                    src="https://www.youtube.com/embed/${responseJson.results[i].key}"
-                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>
+                    <iframe class='js-movie-trailer' 
+                    src='https://www.youtube.com/embed/${responseJson.results[i].key}'
+                    frameborder='0' allow='autoplay; encrypted-media' allowfullscreen><iframe>
                 </div>`
             );
 
@@ -374,9 +374,9 @@ function displayYoutubeById(responseJson, movieDiv) {
 function addTitleToScorecard(title1, title2) {
     $('#score-titles').removeClass('hidden')
     $('#score-titles').append(
-        `<li>${title1}</li>
+        `<li class='champion-color'>${title1}</li>
         <li>VS.</li>
-        <li>${title2}</li>`
+        <li class='contender-color'>${title2}</li>`
     );
 }
 
@@ -392,21 +392,19 @@ function compareMovieRatings(movieScores1, movieScores2, title1, title2) {
         else if (movieScores1[i] < movieScores2[i]) {
             winsMovie2++;
         }
-        else {
-            return;
-        }
+        else {}
     }
 
     if (winsMovie1 > winsMovie2) {
-        $('#scorecard').append(`<h3>TKO! <span class="winner-name">${title1}</span> Wins!</h3>`);
-        $('#js-score-one').addClass('winner');
+        $('#scorecard').append(`<h3>TKO! <span class='champion-color'>${title1}</span> Wins!</h3>`);
+        $('#js-score-one').addClass('winner champion-color');
     }
     else if (winsMovie1 < winsMovie2) {
-        $('#scorecard').append(`<h3>The New Champion Is <span class="winner-name">${title2}</span>!</h3>`);
-        $('#js-score-two').addClass('winner');
+        $('#scorecard').append(`<h3>The New Champion Is <span class='contender-color'>${title2}</span>!</h3>`);
+        $('#js-score-two').addClass('winner contender-color');
     }
     else {
-        $('#scorecard').append(`<h3>It's A Draw!</h3>`)
+        $('#scorecard').append("<h3>It's A Draw!</h3>")
     }
 }
 
@@ -436,6 +434,11 @@ function hideResultsForm() {
     $('#results-form').addClass('hidden');
 }
 
+function changeBackgroundImage() {
+    $('body').removeClass('gloves-background');
+    $('body').addClass('cage-background');
+}
+
 function readyDisplay() {
     $('#movie-display').removeClass('hidden');
     $('.not-found').remove();
@@ -449,6 +452,7 @@ function handleReadyButton() {
         runTmdbMovieDetailsGets();
         hideResultsForm();
         showNavbar();
+        changeBackgroundImage();
     });
 }
 
@@ -464,10 +468,9 @@ function handleScoreButton(){
 }
 
 function handleRestartButton() {
-    $('#scorecard').append('<div id="restart-button"><button class="restart-button" type="button">Here Comes A New Challenger!</button></div>')
+    $('#scorecard').append("<div id='restart-button'><button class='restart-button' type='button'>Here Comes A New Challenger!</button></div>")
     $('.restart-button').on('click', function(event) {
-        location.href = location.href;
-           
+        location.href = location.href
     });
 }
 
@@ -493,7 +496,6 @@ function handleScrollPastNav() {
 }
 
 function handleStartButton() {
-    console.log('ran start');
     readyDisplay();
     const movie1 = $('#movie-one').val();
     const movie2 = $('#movie-two').val();

@@ -19,10 +19,20 @@ body {
     font-family: montserrat;
     color: #212c2c;
     height: 100%;
+}
+
+.gloves-background {
+    background-image: linear-gradient(rgba(233, 238, 231, 0.9), rgba(233, 238, 231, 0.5)), url(images/boxing_gloves.jpg);
+    background-image: -webkit-linear-gradient(rgba(233, 238, 231, 0.9), rgba(233, 238, 231, 0.5)), url(images/boxing_gloves.jpg);
+    background-image: -moz-linear-gradient(rgba(233, 238, 231, 0.9), rgba(233, 238, 231, 0.5)), url(images/boxing_gloves.jpg);
+    background-size: cover;
+}
+
+.cage-background {
     background-image: linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
     background-image: -webkit-linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
     background-image: -moz-linear-gradient(rgba(233, 238, 231, 0.8), rgba(233, 238, 231, 0.8)), url(images/chain_link.jpg);
-    background-size: contain;
+    background-size: cover;
 }
 
 main {
@@ -50,7 +60,7 @@ h3 {
 
 .tagline {
     margin: 0px 20px;
-    color:#807f90;
+    color:#d80731;
     font-weight: bold;
  }
 
@@ -85,10 +95,7 @@ a:hover {
 
 #form-container, #form-search-results {
     margin: 0px 20px;
-    background-image: linear-gradient(to bottom right, rgba(216, 7, 49, 0.8), rgba(0, 0, 0, 0.3));
-    background-image: -webkit-linear-gradient(to bottom right, rgba(216, 7, 49, 0.8), rgba(0, 0, 0, 0.3));
-    background-image: -moz-linear-gradient(to bottom right, rgba(216, 7, 49, 0.8), rgba(0, 0, 0, 0.3));
-    background-color: #d80731;
+    background: white;
     padding: 10px;
     border-radius: 4px;
     -webkit-box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.7);
@@ -101,6 +108,7 @@ form div {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    min-height: 60vh;
 }
 
 select, input[type=text] {
@@ -111,24 +119,30 @@ label {
     font-family: anton;
     font-size: 20px;
     text-align: left;
-    color: white;
+}
+
+.champion-color, #js-movie-one .js-movie-title {
+    color: #d80731;
+}
+
+.contender-color, #js-movie-two .js-movie-title {
+    color: #0a4bd6;
 }
 
 legend {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #212c2c;
 }
 
 input[type=text], select, textarea {
     font-size: 100%;
     font-family: montserrat;
-    background: linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgba(216, 7, 49, .01));
-    background: -webkit-linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgba(216, 7, 49, .01));
-    background: -moz-linear-gradient(to top right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.01), rgba(216, 7, 49, .01));
     border: none;
-    border-bottom: 2px solid #d80731;
-    border-left: 2px solid #d80731;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    border-left: 2px solid rgba(0, 0, 0, 0.2);
+    padding-left: 4px;
 }
 
 input:-webkit-autofill,
@@ -143,30 +157,41 @@ select:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-input[type=text]:focus {
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .1), rgba(216, 7, 49, .01));
-    background: -webkit-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .1), rgba(216, 7, 49, .01));
-    background: -moz-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .1), rgba(216, 7, 49, .01));
+#movie-one:focus {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .2), rgba(216, 7, 49, .1));
+    background: -webkit-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .2), rgba(216, 7, 49, .1));
+    background: -moz-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(216, 7, 49, .2), rgba(216, 7, 49, .1));
+    outline: none;
+}
+
+#movie-two:focus {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(10, 75, 214, .2), rgba(10, 75, 214, .1));
+    background: -webkit-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(10, 75, 214, .2), rgba(10, 75, 214, .1));
+    background: -moz-linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(10, 75, 214, .2), rgba(10, 75, 214, .1));
     outline: none;
 }
 
 ::placeholder {
-    /* color: rgba(0, 0, 0, 0.356); */
-    color: rgb(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.4);
 }
 
 input[type=button], input[type=submit], input[type=reset], button {
     font-family: montserrat;
     font-size: 16px;
-    color: #ffffff;
-    text-shadow: 0 0 3px #212c2c;
-    background: #d80731;
-    border: none;
+    color: #000000;
+    background: white;
+    border: #d80731 solid 2px;
     border-radius: 16px;
     padding: 8px 16px;
     margin-bottom: 10px;
     -webkit-appearance: none;
     -moz-appearance: none;
+}
+
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, button:hover {
+    color: white;
+    background: #d80731;
+    font-weight: bold;
 }
 
 section {
@@ -295,10 +320,6 @@ section {
 .winner {
     font-size: 120%;
     font-weight: bolder;
-}
-
-.winner-name {
-    color: #d80731;
 }
 
 footer {
