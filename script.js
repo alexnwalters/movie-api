@@ -360,9 +360,9 @@ function displayYoutubeById(responseJson, movieDiv) {
         if (responseJson.results[i].type == 'Trailer') {
             $(movieDiv).append(
                 `<div class='js-trailer-container'>
-                    <iframe class='js-movie-trailer' 
-                    src='https://www.youtube.com/embed/${responseJson.results[i].key}'
-                    frameborder='0' allow='autoplay; encrypted-media' allowfullscreen><iframe>
+                    <iframe class="js-movie-trailer" 
+                    src="https://www.youtube.com/embed/${responseJson.results[i].key}"
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen><iframe>
                 </div>`
             );
 
