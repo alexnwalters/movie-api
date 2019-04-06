@@ -64,6 +64,11 @@ h3 {
     font-weight: bold;
  }
 
+ .description {
+     margin-top: 6px;
+     font-size: 12px;
+ }
+
 #navbar {
     position: fixed;
     top: 0;
@@ -358,6 +363,10 @@ footer {
         margin: 0 auto;
     }
 
+    .description {
+        font-size: unset;
+    }
+
     .tagline, #form-container, #form-search-results {
         width: 70vw;
         margin: 0 auto;      
@@ -453,5 +462,9 @@ footer {
 
     .js-movie-plot {
         line-height: 30px;
+    }
+
+    .description {
+        font-size: 20px;
     }
 }

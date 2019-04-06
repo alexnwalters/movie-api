@@ -427,7 +427,6 @@ function showNavbar() {
     $('nav').removeClass('hidden');
     $('header h1').addClass('hidden');
     $('.tagline').addClass('hidden')
-    handleNavRestart();
 }
 
 function hideResultsForm() {
@@ -448,7 +447,7 @@ function readyDisplay() {
 
 function handleReadyButton() {
     $('#ready-button').on('click', event => {
-        event.preventDefault();        
+        event.preventDefault();       
         runTmdbMovieDetailsGets();
         hideResultsForm();
         showNavbar();
@@ -474,12 +473,6 @@ function handleRestartButton() {
     });
 }
 
-function handleNavRestart() {
-    $('#nav-restart').on('click', function(event) {
-        location.reload();
-    });
-}
-
 function handleSearchRestart() {
     $('#search-again').on('click', function(event) {
         location.reload();
@@ -502,9 +495,14 @@ function handleStartButton() {
     runtmdbMovieSearchGets(movie1, movie2);
 }
 
+function clearFormOnStart() {
+    document.getElementById('search-form').reset();
+}
+
 function watchForm() {
     handleScoreButton();
     handleScrollPastNav();
+    clearFormOnStart();
 }
 
 $(watchForm);

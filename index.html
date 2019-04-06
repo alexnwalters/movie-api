@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Anton|Montserrat" rel="stylesheet">
 </head>
-<body class="gloves-background">          
+<body class="gloves-background" aria-live="polite">          
     <nav role="navigation" id="navbar" class="hidden">
         <div id="nav-list">
             <a href="#js-movie-one" class="nav-scroll">Champion</a>
             <a href="#js-movie-two" class="nav-scroll">Contender</a>
             <a href="#scorecard" class="nav-scroll">Scorecard</a>
-            <a id="nav-restart">Restart</a>
+            <a href="index.html" id="nav-restart">Restart</a>
         </div>
     </nav>
 
@@ -23,6 +23,8 @@
         <h1>Box Office Brawl</h1>
 
         <p class="tagline">Where two movies enter, only one will leave victorious!</p>
+
+        <p class="description">Compare the website ratings of two movies.</p>
     </header>
 
     <main>
@@ -63,7 +65,7 @@
         </form>    
         
 
-        <section id="movie-display" class="movie-display hidden"> 
+        <section id="movie-display" class="movie-display hidden">
             <div id="js-movie-one"></div>
             <div id="js-movie-two"></div>
         </section>
