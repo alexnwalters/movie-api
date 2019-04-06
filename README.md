@@ -6,7 +6,7 @@ Allows users to compare the ratings of two movies based on their Internet Movie 
 
 ### Concept
 ---
-The inspiration for this project came about over a debate between and a friend and myself over which of two movies was better and therefore worth watching.  Instead of us needing to go to several popular movie sites and searching for each movie at each site, the idea was to bring several rating systems into one quick view. After displaying some general information about the two films, including *plot, rating, poster and trailer*, the app would reveal the winner based on which movie has the higher score for each of the three movie sites: *IMDb, Rotten Tomatoes, and Metacritic*.  The app makes use of both The Movie Database (TMDb) API and the Open Movie Database (OMDb) API.
+The inspiration for this project came about over a debate between a friend and myself over which of two movies was better and therefore worth watching.  Instead of us needing to go to several popular movie sites and searching for each movie at each site, the idea was to bring several rating systems into one quick view. After displaying some general information about the two films, including *plot, rating, poster and trailer*, the app would reveal the winner based on which movie has the higher score for each of the three movie sites: *IMDb, Rotten Tomatoes, and Metacritic*.  The app makes use of both The Movie Database (TMDb) API and the Open Movie Database (OMDb) API.
 
 ### Usage
 ---
